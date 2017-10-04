@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="WorkflowAndWSDACombinedSample.WorkflowPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WorkflowAndWSDACombinedSample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Margin="5,0,5,0">
+        <Grid.Resources>
+            <local:LengthToBoolConverter x:Key="LengthToBool"/>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="WorkflowHeadingTextBlock" Grid.Row="0" Text="{Binding Path=WorkflowHeadingLabel}" Margin="0,5,0,5" HorizontalAlignment="Left" FontSize="20" Foreground="Blue"/>
+        <StackPanel x:Name="WatermarkInformationStackPanel" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Stretch" Margin="2,5,2,5" BorderBrush="LightGray" BorderThickness="2">
+            <TextBlock x:Name="WatermarkLabelTextBlock" Text="{Binding Path=WatermarkLabel}" Margin="0,5,0,5"  HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="WatermarkTextBox" PlaceholderText="{Binding WatermarkEntryPlaceholder}" MaxLength="16" HorizontalAlignment="Stretch" Text="{Binding Watermark, Mode=TwoWay}" FontFamily="Symbols" />
+        </StackPanel>
+        <StackPanel x:Name="ImageInformationStackPanel" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="2,5,2,5"  BorderBrush="LightGray" BorderThickness="2">
+            <Image x:Name="LogoImage" Width="50" Height="50" Margin="5,5,5,5" Source="{Binding Path=ImageFilePath}"/>
+            <CheckBox x:Name="ImageCheckBox" Style="{StaticResource WorkflowAndWSDACombinedSampleCheckBoxStyle}" Content="{Binding Path=ImageCheckBoxLabel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </StackPanel>
+        <Button x:Name="SetWatermarkButton" Grid.Row="3" Margin="0,5,0,5"  Content="{Binding Path=ActionButtonLabel}" IsEnabled="{Binding ElementName=WatermarkTextBox, Path=Text.Length, Mode=OneWay, Converter={StaticResource ResourceKey=LengthToBool}}" HorizontalAlignment="Stretch" Click="SetWatermarkButton_Click" />
+        <CheckBox x:Name="UseStandaloneSettingsCheckBox" Grid.Row="3" Margin="0,5,0,5" Style="{StaticResource WorkflowAndWSDACombinedSampleCheckBoxStyle}" Content="{Binding Path=UseStandaloneSettingsCheckBoxLabel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Checked="UseStandaloneSettingsCheckBox_Checked" Unchecked="UseStandaloneSettingsCheckBox_Unchecked" />
+    </Grid>
+</Page>

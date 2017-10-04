@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{5809E599-7A9D-4262-8530-5D5E5AE42879}</ProjectGuid>
+    <OutputType>AppContainerExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WorkflowAndWSDACombinedSample</RootNamespace>
+    <AssemblyName>WorkflowAndWSDACombinedSample</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0.16288.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16288.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
+    <AppxBundle>Auto</AppxBundle>
+    <AppxStrictManifestValidationEnabled>false</AppxStrictManifestValidationEnabled>
+    <AppxPackageValidationEnabled>false</AppxPackageValidationEnabled>
+    <DisableAppxManifestItemPackageContentValidation>true</DisableAppxManifestItemPackageContentValidation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="Assets\contoso_logo.jpg" />
+    <Content Include="Assets\PrintPeripheralsAppList.scale-100.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.scale-125.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.scale-150.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.scale-200.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.scale-400.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-16.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-16_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-20.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-20_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-24.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-256.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-256_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-30.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-30_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-32.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-32_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-36.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-36_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-40.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-40_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-48.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-48_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-60.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-60_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-64.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-64_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-72.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-72_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-80.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-80_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-96.png" />
+    <Content Include="Assets\PrintPeripheralsAppList.targetsize-96_altform-unplated.png" />
+    <Content Include="Assets\PrintPeripheralsBadgeLogo.scale-100.png" />
+    <Content Include="Assets\PrintPeripheralsBadgeLogo.scale-125.png" />
+    <Content Include="Assets\PrintPeripheralsBadgeLogo.scale-150.png" />
+    <Content Include="Assets\PrintPeripheralsBadgeLogo.scale-200.png" />
+    <Content Include="Assets\PrintPeripheralsBadgeLogo.scale-400.png" />
+    <Content Include="Assets\PrintPeripheralsLargeTile.scale-100.png" />
+    <Content Include="Assets\PrintPeripheralsLargeTile.scale-125.png" />
+    <Content Include="Assets\PrintPeripheralsLargeTile.scale-150.png" />
+    <Content Include="Assets\PrintPeripheralsLargeTile.scale-200.png" />
+    <Content Include="Assets\PrintPeripheralsLargeTile.scale-400.png" />
+    <Content Include="Assets\PrintPeripheralsMedTile.scale-100.png" />
+    <Content Include="Assets\PrintPeripheralsMedTile.scale-125.png" />
+    <Content Include="Assets\PrintPeripheralsMedTile.scale-150.png" />
+    <Content Include="Assets\PrintPeripheralsMedTile.scale-200.png" />
+    <Content Include="Assets\PrintPeripheralsMedTile.scale-400.png" />
+    <Content Include="Assets\PrintPeripheralsSmallTile.scale-100.png" />
+    <Content Include="Assets\PrintPeripheralsSmallTile.scale-125.png" />
+    <Content Include="Assets\PrintPeripheralsSmallTile.scale-150.png" />
+    <Content Include="Assets\PrintPeripheralsSmallTile.scale-200.png" />
+    <Content Include="Assets\PrintPeripheralsSmallTile.scale-400.png" />
+    <Content Include="Assets\PrintPeripheralsSplashScreen.scale-100.png" />
+    <Content Include="Assets\PrintPeripheralsSplashScreen.scale-125.png" />
+    <Content Include="Assets\PrintPeripheralsSplashScreen.scale-150.png" />
+    <Content Include="Assets\PrintPeripheralsSplashScreen.scale-200.png" />
+    <Content Include="Assets\PrintPeripheralsSplashScreen.scale-400.png" />
+    <Content Include="Assets\PrintPeripheralsStoreLogo.scale-100.png" />
+    <Content Include="Assets\PrintPeripheralsStoreLogo.scale-125.png" />
+    <Content Include="Assets\PrintPeripheralsStoreLogo.scale-150.png" />
+    <Content Include="Assets\PrintPeripheralsStoreLogo.scale-200.png" />
+    <Content Include="Assets\PrintPeripheralsStoreLogo.scale-400.png" />
+    <Content Include="Assets\PrintPeripheralsWideTile.scale-100.png" />
+    <Content Include="Assets\PrintPeripheralsWideTile.scale-125.png" />
+    <Content Include="Assets\PrintPeripheralsWideTile.scale-150.png" />
+    <Content Include="Assets\PrintPeripheralsWideTile.scale-200.png" />
+    <Content Include="Assets\PrintPeripheralsWideTile.scale-400.png" />
+    <Content Include="Assets\smiley.jpg" />
+    <Content Include="StoreManifest.xml" />
+    <Content Include="Assets\Symbols.ttf" />
+    <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Strings\LocalizedStrings.cs" />
+    <Compile Include="WorkflowPage.xaml.cs">
+      <DependentUpon>WorkflowPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\Default.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\en-us\Resources.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="WorkflowPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LocalStorageUtilities\LocalStorageUtilities.csproj">
+      <Project>{96dceb8a-ff0d-41ef-a632-389cdf24c955}</Project>
+      <Name>LocalStorageUtilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PrinterContextNativeRuntimeComponent\PrinterContextNativeRuntimeComponent.vcxproj">
+      <Project>{85cb9c94-0429-42d6-b5b6-670332db2821}</Project>
+      <Name>PrinterContextNativeRuntimeComponent</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UtilitiesLibrary\UtilitiesLibrary.csproj">
+      <Project>{78f56c11-5854-4ed4-81fc-ede7d4fdf8e5}</Project>
+      <Name>UtilitiesLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WFBackgroundTasks\WFBackgroundTasks.csproj">
+      <Project>{c6920a33-cc4a-4edf-a1c2-cf131ce1f562}</Project>
+      <Name>WFBackgroundTasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XpsOMRuntimeComponent\XpsOMRuntimeComponent.vcxproj">
+      <Project>{5503e3b8-60eb-4387-89db-1260f51b6894}</Project>
+      <Name>XpsOMRuntimeComponent</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="WindowsDesktop, Version=10.0.16288.0">
+      <Name>Windows Desktop Extensions for the UWP</Name>
+    </SDKReference>
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,11 @@
+﻿<Application
+    x:Class="WorkflowAndWSDACombinedSample.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WorkflowAndWSDACombinedSample"
+    RequestedTheme="Light">
+    
+    <Application.Resources>
+        <ResourceDictionary Source="Styles.xaml"/>
+    </Application.Resources>
+</Application>

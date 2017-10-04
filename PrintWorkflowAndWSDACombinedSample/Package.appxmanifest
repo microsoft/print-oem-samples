@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:uap4="http://schemas.microsoft.com/appx/manifest/uap/windows10/4" IgnorableNamespaces="uap uap4 mp">
+  <Identity Name="Microsoft.WorkflowAndWSDACombinedSample" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" Version="1.0.2.0" />
+  <mp:PhoneIdentity PhoneProductId="a7a9163e-fad3-48c5-88fd-5f2023445bb2" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Properties>
+    <DisplayName>WorkflowAndWSDACombinedSample</DisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
+    <Logo>Assets\PrintPeripheralsStoreLogo.png</Logo>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="WorkflowAndWSDACombinedSample" Executable="WorkflowAndWSDACombinedSample.exe" EntryPoint="WorkflowAndWSDACombinedSample.App">
+      <uap:VisualElements DisplayName="Workflow And WSDA Combined Sample" AppListEntry="default" Square150x150Logo="Assets\PrintPeripheralsMedTile.png" Square44x44Logo="Assets\PrintPeripheralsAppList.png" Description="WorkflowAndWSDACombinedSample sample combined Windows Store Device Application to add to &quot;More settings&quot; and also function as a Print Workflow application" BackgroundColor="transparent">
+        <uap:LockScreen Notification="badge" BadgeLogo="Assets\PrintPeripheralsBadgeLogo.png" />
+        <uap:DefaultTile Wide310x150Logo="Assets\PrintPeripheralsWideTile.png" Square310x310Logo="Assets\PrintPeripheralsLargeTile.png" Square71x71Logo="Assets\PrintPeripheralsSmallTile.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo" />
+            <uap:ShowOn Tile="wide310x150Logo" />
+            <uap:ShowOn Tile="square310x310Logo" />
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="Assets\PrintPeripheralsSplashScreen.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.printTaskSettings" Executable="WorkflowAndWSDACombinedSample.exe" EntryPoint="WorkflowAndWSDACombinedSample.App" />
+        <uap4:Extension Category="windows.printWorkflowForegroundTask" EntryPoint="WorkflowAndWSDACombinedSample.App" />
+        <uap4:Extension Category="windows.printWorkflowBackgroundTask" EntryPoint="WFBackgroundTasks.WfBackgroundTask" />
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>
