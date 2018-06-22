@@ -201,7 +201,7 @@ namespace PrinterContextNativeRuntimeComponent
             *     String ^ feature             The feature whose option information will be retrieved
             *     String ^ infoTypeString      DisplayName or Index of the feature
             *  Returns:
-            *     Array<String^>^              Requested information about the requested feature option 
+            *     Array<String^>^              Requested information about the requested feature option
             */
             Array<String^>^ PrintHelperClass::GetOptionInfo(String ^ feature, String ^ infoTypeString)
             {
@@ -275,8 +275,8 @@ namespace PrinterContextNativeRuntimeComponent
                     }
                 }
 
-                // It is possible for the PrintTicket object to not contain a current selection for this feature causing none 
-                // of the options in the print capabilities to be marked as selected.  In this case, the developers should 
+                // It is possible for the PrintTicket object to not contain a current selection for this feature causing none
+                // of the options in the print capabilities to be marked as selected.  In this case, the developers should
                 // be familiar enough with the printer hardware to display and set the feature to the correct printer default option.
                 // Because this is a generic sample app, the first option will be displayed and set when the user hits the back button.
                 return "0";
@@ -437,8 +437,8 @@ namespace PrinterContextNativeRuntimeComponent
                 }
 
                 // If the PrinterExtensionContextType is PrinterExtensionContextNativeType then the ticket is unavailable through here
-                // and the developer should be using the WInRT Print Ticket library
-                if (!m_context || m_initializationType == InitializationType::PrinterExtensionContextType)
+                // and the developer should be using the WinRT Print Ticket library
+                if (!m_context || m_initializationType == InitializationType::PrinterExtensionContextNativeType)
                 {
                     return false;
                 }
@@ -495,7 +495,7 @@ namespace PrinterContextNativeRuntimeComponent
                 if (!string || string->IsEmpty()) throw ref new InvalidArgumentException();
                 // Create wstring
                 std::wstring ws(string->Data());
-                // Create a wstringstream 
+                // Create a wstringstream
                 std::wstringstream convertor;
                 // Create an integer
                 int ws_int;
