@@ -188,7 +188,7 @@ namespace PrinterContextNativeRuntimeComponent
                     ComPtr<IPrintSchemaOption> option;
                     ThrowIf(options->GetAt(index, option.GetAddressOf()));
                     if (!option.Get()) ThrowIf(E_UNEXPECTED);
-                    ThrowIf(ticketFeature->get_SelectedOption(option.GetAddressOf()));
+                    ThrowIf(ticketFeature->put_SelectedOption(option.Get()));
                     if (!option.Get()) ThrowIf(E_UNEXPECTED);
                 }
             }
