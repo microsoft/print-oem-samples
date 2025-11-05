@@ -1,0 +1,12 @@
+namespace VirtualPrinterAppSdk
+{
+    [default_interface]
+    runtimeclass PreviewPaginationControl : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        PreviewPaginationControl();
+        event Microsoft.UI.Xaml.RoutedEventHandler PrevButtonClicked;
+        event Microsoft.UI.Xaml.RoutedEventHandler NextButtonClicked;
+        UInt32 TotalPages;
+        UInt32 CurrentPage;
+    }
+}

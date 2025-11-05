@@ -1,0 +1,8 @@
+namespace VirtualPrinterAppSdk
+{
+    [default_interface]
+    runtimeclass WorkflowWatermarkSample : Microsoft.UI.Xaml.Controls.Page
+    {
+        WorkflowWatermarkSample();
+    }
+}

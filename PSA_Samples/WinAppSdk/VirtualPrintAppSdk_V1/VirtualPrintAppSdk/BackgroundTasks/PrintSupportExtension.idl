@@ -1,0 +1,9 @@
+namespace BackgroundTasks
+{
+    [bindable]
+    [default_interface]
+    runtimeclass PrintSupportExtension : Windows.ApplicationModel.Background.IBackgroundTask
+    {
+        PrintSupportExtension();
+    }
+}

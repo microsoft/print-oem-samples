@@ -1,0 +1,1 @@
+ippemulator -nouuidprefix -command "load -f A:\tools1\ippemulator\PrinterProfile.json -uuid 44110044-beef-45ac-a376-442233445533"

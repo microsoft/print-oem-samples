@@ -1,0 +1,11 @@
+namespace VirtualPrinterAppSdk
+{
+    [default_interface]
+    runtimeclass WatermarkPreviewControl : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        WatermarkPreviewControl();
+        event Microsoft.UI.Xaml.Input.TappedEventHandler WatermarkPreviewTapped;
+        void PreviewPage(XpsUtil.XpsPageWrapper pageWrapper);
+        void StartPreviewRefresh();
+    }
+}
