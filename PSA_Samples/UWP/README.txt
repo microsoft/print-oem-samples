@@ -1,5 +1,5 @@
 VERSION 1:
   - Initial copy of the sample.
 
-VERSION 2:
+VERSION 2 (the one currently in GitHub):
   - has tab to install Virtual printers when launched from start menu
