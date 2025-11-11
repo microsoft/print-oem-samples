@@ -1,0 +1,14 @@
+// Copyright (c) Microsoft Corporation and Contributors.
+// Licensed under the MIT License.
+
+namespace VirtualPrinterAppSdk
+{
+    [default_interface]
+    runtimeclass MainWindow : Microsoft.UI.Xaml.Window
+    {
+        MainWindow();
+        MainWindow(Windows.Graphics.Printing.Workflow.PrintWorkflowJobActivatedEventArgs args);
+        Windows.Graphics.Printing.Workflow.PrintWorkflowJobActivatedEventArgs WorkflowJobActivatedArgs{ get; };
+        Microsoft.UI.Windowing.AppWindow MyAppWindow{ get; };
+    }
+}

@@ -1,0 +1,20 @@
+namespace BackgroundTasks
+{
+    [bindable]
+    [default_interface]
+    runtimeclass LocalStorageHelper 
+    {
+        LocalStorageHelper();
+        static Boolean GetWatermarkTextPropertiesFromLocalStorage(out String watermarkText, out Int32 fontSize, out Double xPos, out Double yPos);
+        static void SaveWatermarkTextPropertiesToLocalStorage(String Watermark, Int32 fontSize, Double xPos, Double yPos);
+        static void ResetWatermarkTextAndImage();
+        static void SaveImagePropertiesToLocalStorage(String imageFile, Double dpiX, Double dpiY, Int32 imageWidth, Int32 imageHeight);
+        static Boolean GetImagePropertiesFromLocalStorage(out String imageFile, out Double dpiX, out Double dpiY, out Int32 width, out Int32 height);
+        static void SaveCustomIppAttributesToLocalStorage(Windows.Foundation.Collections.IMap<String, Windows.Devices.Printers.IppAttributeValue> attributes);
+        static Windows.Foundation.Collections.IMap<String, Windows.Devices.Printers.IppAttributeValue> GetCustomIppAttributesFromLocalStorage();
+        static Boolean GetDisableIppCompression(out Boolean disableIppCompression);
+        static void SetDisableIppCompression(Boolean disableIppCompression);
+        static Boolean GetEnablePsaCustomToast(out Boolean enablePsaCustomToast);
+        static void SetEnablePsaCustomToast(Boolean enablePsaCustomToast);
+    }
+}

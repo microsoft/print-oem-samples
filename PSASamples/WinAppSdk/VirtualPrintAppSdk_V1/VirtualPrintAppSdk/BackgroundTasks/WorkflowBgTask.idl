@@ -1,0 +1,9 @@
+namespace BackgroundTasks
+{
+    [bindable]
+    [default_interface]
+    runtimeclass WorkflowBgTask : Windows.ApplicationModel.Background.IBackgroundTask
+    {
+        WorkflowBgTask();
+    }
+}

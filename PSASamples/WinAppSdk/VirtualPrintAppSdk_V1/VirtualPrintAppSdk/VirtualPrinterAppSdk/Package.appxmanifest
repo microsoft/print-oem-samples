@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:uap12="http://schemas.microsoft.com/appx/manifest/uap/windows10/12"
+  xmlns:printsupport="http://schemas.microsoft.com/appx/manifest/printsupport/windows10"
+  xmlns:printsupport2="http://schemas.microsoft.com/appx/manifest/printsupport/windows10/2"
+  IgnorableNamespaces="uap uap12 printsupport printsupport2 rescap">
+
+  <Identity
+    Name="0a8182cd-d3dd-4b8f-a41a-d39ed3f1a7bb"
+    Publisher="CN=pradeem"
+    Version="1.0.3.0" />
+
+  <mp:PhoneIdentity PhoneProductId="0a8182cd-d3dd-4b8f-a41a-d39ed3f1a7bb" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>VirtualPrinterAppSdk</DisplayName>
+    <PublisherDisplayName>absisay</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="$targetentrypoint$"
+      uap10:SupportsMultipleInstances="true">
+      <uap:VisualElements
+        DisplayName="VirtualPrinterAppSdk"
+        Description="VirtualPrinterAppSdk"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <printsupport:Extension Category="windows.printSupportSettingsUI" EntryPoint="VirtualPrinterAppSdk.App"/>
+        <printsupport:Extension Category="windows.printSupportWorkflow" EntryPoint="BackgroundTasks.WorkflowBgTask"/>
+        <printsupport:Extension Category="windows.printSupportExtension" EntryPoint="BackgroundTasks.PrintSupportExtension"/>
+        <printsupport2:Extension Category="windows.printSupportVirtualPrinterWorkflow" EntryPoint="BackgroundTasks.VirtualPrinterBgTask">
+          <printsupport2:PrintSupportVirtualPrinter DisplayName="ms-resource:PdfPrintDisplayName" PrinterUri="contoso-psa:print-to-pdf" PreferredInputFormat="application/oxps" OutputFileTypes="pdf" PdcFile="Config\PrinterPdc.xml">
+            <printsupport2:SupportedFormats>
+              <printsupport2:SupportedFormat Type="application/pdf" MaxVersion="1.7" />
+            </printsupport2:SupportedFormats>
+          </printsupport2:PrintSupportVirtualPrinter>
+        </printsupport2:Extension>
+        <printsupport2:Extension Category="windows.printSupportVirtualPrinterWorkflow" EntryPoint="BackgroundTasks.VirtualPrinterBgTask">
+          <printsupport2:PrintSupportVirtualPrinter DisplayName="ms-resource:PsPrintDisplayName" PrinterUri="contoso-psa:print-to-ps" PreferredInputFormat="application/postscript" OutputFileTypes="ps" PdcFile="Config\PrinterPdc.xml">
+            <printsupport2:SupportedFormats>
+              <printsupport2:SupportedFormat Type="application/postscript" />
+            </printsupport2:SupportedFormats>
+          </printsupport2:PrintSupportVirtualPrinter>
+        </printsupport2:Extension>
+        <printsupport2:Extension Category="windows.printSupportVirtualPrinterWorkflow" EntryPoint="BackgroundTasks.VirtualPrinterBgTask">
+          <printsupport2:PrintSupportVirtualPrinter DisplayName="ms-resource:CloudPrintDisplayName" PrinterUri="contoso-psa:print-to-clould" PreferredInputFormat="application/oxps" PdcFile="Config\PrinterPdc.xml">
+            <printsupport2:SupportedFormats>
+              <printsupport2:SupportedFormat Type="application/postscript" />
+            </printsupport2:SupportedFormats>
+          </printsupport2:PrintSupportVirtualPrinter>
+        </printsupport2:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

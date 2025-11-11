@@ -1,0 +1,20 @@
+namespace VirtualPrinterAppSdk
+{
+    enum JobActivationKind
+    {
+        JobNotification,
+        WorkflowPdl,
+        WorkflowVirtualPrinterPdl
+    };
+
+    [default_interface]
+    runtimeclass JobActivationMainPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        JobActivationMainPage();
+        void CloseDialog();
+        Windows.Graphics.Printing.Workflow.PrintWorkflowPdlDataAvailableEventArgs PdlDataEventArgs{ get; };
+        Windows.Graphics.Printing.Workflow.PrintWorkflowVirtualPrinterUIEventArgs VirtualPrinterPdlDataEventArgs{ get; };
+        Windows.Graphics.Printing.Workflow.PrintWorkflowJobNotificationEventArgs JobNotificationEventArgs{ get; };
+        JobActivationKind ActivationKind{ get; };
+    }
+}

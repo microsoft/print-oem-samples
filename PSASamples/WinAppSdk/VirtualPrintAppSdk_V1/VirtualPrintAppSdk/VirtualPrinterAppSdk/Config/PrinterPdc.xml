@@ -1,0 +1,134 @@
+﻿<psf2:PrintDeviceCapabilities xmlns:psf2="http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2"
+                         xmlns:ns0000="http://schemas.microsoft.com/windows/2015/02/printing/printschemakeywords/virtualPrinter"
+                         xmlns:psf="http://schemas.microsoft.com/windows/2003/08/printing/printschemaframework"
+                         xmlns:psk="http://schemas.microsoft.com/windows/2003/08/printing/printschemakeywords"
+                         xmlns:psk12="http://schemas.microsoft.com/windows/2013/12/printing/printschemakeywordsv12"
+                         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+						 xmlns:ns0002="http://xml.namespaces.adobe.com/enterprise/print/driver/native/printSchemaPrivateKeywords/2024/05"	  >
+
+  <psk:PageMediaSize psf2:psftype="Feature">
+    <psk:NorthAmericaTabloid psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,279400,431800</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">431800</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">279400</psk:MediaSizeWidth>
+    </psk:NorthAmericaTabloid>
+    <psk:NorthAmericaLegal psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,215900,355600</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">355600</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">215900</psk:MediaSizeWidth>
+    </psk:NorthAmericaLegal>
+    <psk:NorthAmericaStatement psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,139700,215900</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">215900</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">139700</psk:MediaSizeWidth>
+    </psk:NorthAmericaStatement>
+    <psk:NorthAmericaExecutive psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,184150,266700</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">266700</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">184150</psk:MediaSizeWidth>
+    </psk:NorthAmericaExecutive>
+    <psk:ISOA3 psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,297000,420000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">420000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">297000</psk:MediaSizeWidth>
+    </psk:ISOA3>
+    <psk:ISOA4 psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,210000,297000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">297000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">210000</psk:MediaSizeWidth>
+    </psk:ISOA4>
+    <psk:ISOA5 psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,148000,210000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">210000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">148000</psk:MediaSizeWidth>
+    </psk:ISOA5>
+    <psk:JISB4 psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,257000,364000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">364000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">257000</psk:MediaSizeWidth>
+    </psk:JISB4>
+    <psk:JISB5 psf2:psftype="Option" psf2:default="true">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,182000,257000</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">257000</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">182000</psk:MediaSizeWidth>
+    </psk:JISB5>
+    <psk:NorthAmericaLetter psf2:psftype="Option" >
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0,215900,279400</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">279400</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">215900</psk:MediaSizeWidth>
+    </psk:NorthAmericaLetter>
+    <ns0000:Test12X5 psf2:psftype="Option">
+      <psk12:PortraitImageableSize psf2:psftype="Property" xsi:type="psf2:ImageableAreaType">0,0, 355600, 205900</psk12:PortraitImageableSize>
+      <psk:MediaSizeHeight psf2:psftype="ScoredProperty" xsi:type="xsd:integer">205900</psk:MediaSizeHeight>
+      <psk:MediaSizeWidth psf2:psftype="ScoredProperty" xsi:type="xsd:integer">355600</psk:MediaSizeWidth>
+    </ns0000:Test12X5>
+</psk:PageMediaSize>
+
+  <psk:PageOrientation psf2:psftype="Feature">
+    <psk:Landscape psf2:psftype="Option" psf2:default="true"/>
+    <psk:Portrait psf2:psftype="Option" />
+  </psk:PageOrientation>
+
+  <psk:PageResolution psf2:psftype="Feature">
+    <ns0000:ResOption1 psf2:psftype="Option">
+      <psk:ResolutionX psf2:psftype="ScoredProperty" xsi:type="xsd:integer">300</psk:ResolutionX>
+      <psk:ResolutionY psf2:psftype="ScoredProperty" xsi:type="xsd:integer">300</psk:ResolutionY>
+    </ns0000:ResOption1>
+    <ns0000:ResOption2 psf2:psftype="Option">
+      <psk:ResolutionX psf2:psftype="ScoredProperty" xsi:type="xsd:integer">600</psk:ResolutionX>
+      <psk:ResolutionY psf2:psftype="ScoredProperty" xsi:type="xsd:integer">600</psk:ResolutionY>
+    </ns0000:ResOption2>
+    <ns0000:ResOption3 psf2:psftype="Option" psf2:default="true">
+      <psk:ResolutionX psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1200</psk:ResolutionX>
+      <psk:ResolutionY psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1200</psk:ResolutionY>
+    </ns0000:ResOption3>
+  </psk:PageResolution>
+
+  <psk:PageOutputColor psf2:psftype="Feature">
+    <psk:Color psf2:psftype="Option" psf2:default="true">
+      <psk:DeviceBitsPerPixel xsi:type="xsd:integer" psf2:psftype="ScoredProperty">24</psk:DeviceBitsPerPixel>
+      <psk:DriverBitsPerPixel xsi:type="xsd:integer" psf2:psftype="ScoredProperty">24</psk:DriverBitsPerPixel>
+    </psk:Color>
+  </psk:PageOutputColor>
+
+  <psk:JobNUpAllDocumentsContiguously psf2:psftype="Feature">
+    <psf:Option psf2:psftype="Option" psf2:default="true">
+      <psk:PagesPerSheet psf2:psftype="ScoredProperty" xsi:type="xsd:integer">1</psk:PagesPerSheet>
+    </psf:Option>
+    <psf:Option psf2:psftype="Option" psf2:default="false">
+      <psk:PagesPerSheet psf2:psftype="ScoredProperty" xsi:type="xsd:integer">2</psk:PagesPerSheet>
+    </psf:Option>
+    <psf:Option psf2:psftype="Option" psf2:default="false">
+      <psk:PagesPerSheet psf2:psftype="ScoredProperty" xsi:type="xsd:integer">4</psk:PagesPerSheet>
+    </psf:Option>
+    <psf:Option psf2:psftype="Option" psf2:default="false">
+      <psk:PagesPerSheet psf2:psftype="ScoredProperty" xsi:type="xsd:integer">6</psk:PagesPerSheet>
+    </psf:Option>
+    <psf:Option psf2:psftype="Option" psf2:default="false">
+      <psk:PagesPerSheet psf2:psftype="ScoredProperty" xsi:type="xsd:integer">9</psk:PagesPerSheet>
+    </psf:Option>
+    <psf:Option psf2:psftype="Option" psf2:default="false">
+      <psk:PagesPerSheet psf2:psftype="ScoredProperty" xsi:type="xsd:integer">16</psk:PagesPerSheet>
+    </psf:Option>
+  </psk:JobNUpAllDocumentsContiguously>
+
+  <psk:JobCopiesAllDocuments psf2:psftype="ParameterDef">
+    <psf:DataType psf2:psftype="Property" xsi:type="xsd:QName">xsd:integer</psf:DataType>
+    <psf:DefaultValue psf2:psftype="Property" xsi:type="xsd:integer">1</psf:DefaultValue>
+    <psf:Mandatory psf2:psftype="Property" xsi:type="xsd:QName">psk:Unconditional</psf:Mandatory>
+    <psf:MinValue psf2:psftype="Property" xsi:type="xsd:integer">1</psf:MinValue>
+    <psf:MaxValue psf2:psftype="Property" xsi:type="xsd:integer">9999</psf:MaxValue>
+    <psf:Multiple psf2:psftype="Property" xsi:type="xsd:integer">1</psf:Multiple>
+    <psf:UnitType psf2:psftype="Property" xsi:type="xsd:string">copies</psf:UnitType>
+  </psk:JobCopiesAllDocuments>
+
+  <ns0002:JobIdentification psf2:psftype="Feature">
+    <ns0002:JobIdPrintAllPages psf2:psftype="Option" psf2:default="false"/>
+    <ns0002:JobIdBannerOn psf2:psftype="Option" psf2:default="true"/>
+    <ns0002:JobIdPrintFirstPage psf2:psftype="Option" psf2:default="false"/>
+    <ns0002:JobIdOff psf2:psftype="Option" psf2:default="false"/>
+  </ns0002:JobIdentification>
+
+
+</psf2:PrintDeviceCapabilities>
