@@ -45,10 +45,6 @@ namespace PrintSupportApp
             {
                 contentFrame.Navigate(typeof(GetIppPrinterUrl), printerName);
             }
-            else if (tag == "VirtualPrinters")
-            {
-                contentFrame.Navigate(typeof(VirtualPrintersPage), printerName);
-            }
             else
             {
                 contentFrame.Navigate(typeof(AppInfo), printerName);
