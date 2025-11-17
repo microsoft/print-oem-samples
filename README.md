@@ -74,7 +74,7 @@ The UWP sample includes three main components:
 - **XpsUtil**: Native Windows Runtime Component for XPS document manipulation
 
 ### PSASamples/WinAppSdk
-Windows App SDK samples for Print Support Applications in both C++ and C# demonstrating modern Windows app development with:
+Windows App SDK samples for Print Support Applications in C++ demonstrating modern Windows app development with:
 - Print Support Extension background tasks
 - Workflow background task processing
 - Virtual printer implementation
