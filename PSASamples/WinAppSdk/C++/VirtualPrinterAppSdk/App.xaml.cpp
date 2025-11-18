@@ -113,29 +113,3 @@ void App::OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs
     window = make<MainWindow>();
     window.Activate();
 }
-
-int __stdcall wWinMain(HINSTANCE, HINSTANCE, PWSTR, int)
-{
-    {
-        void (WINAPI * pfnXamlCheckProcessRequirements)();
-        auto module = ::LoadLibrary(L"Microsoft.ui.xaml.dll");
-        if (module)
-        {
-            pfnXamlCheckProcessRequirements = reinterpret_cast<decltype(pfnXamlCheckProcessRequirements)>(GetProcAddress(module, "XamlCheckProcessRequirements"));
-            if (pfnXamlCheckProcessRequirements)
-            {
-                (*pfnXamlCheckProcessRequirements)();
-            }
-
-            ::FreeLibrary(module);
-        }
-    }
-
-    winrt::init_apartment(winrt::apartment_type::single_threaded);
-     winrt::Microsoft::UI::Xaml::Application::Start(
-        [](auto&&)
-        {
-            winrt::make<winrt::VirtualPrinterAppSdk::implementation::App>();
-        });
-    return 0;
-}

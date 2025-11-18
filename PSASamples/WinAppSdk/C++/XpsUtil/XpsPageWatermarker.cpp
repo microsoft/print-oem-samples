@@ -147,12 +147,13 @@ namespace winrt::XpsUtil::implementation
         com_ptr<IXpsOMSolidColorBrush> xpsTextColorBrush;
         check_hresult(m_xpsFactory->CreateSolidColorBrush(&xpsColorBodyText, nullptr, xpsTextColorBrush.put()));
 
-        // Create the XPS_POINT for where the text begins.
-        XPS_SIZE pageDimensions = { 0 };
-        check_hresult(xpsPage->GetPageDimensions(&pageDimensions));
-        XPS_POINT textOrigin = { pageDimensions.width * static_cast<float>(xRelativeOffset), pageDimensions.height * static_cast<float>(yRelativeOffset) };
-
-        auto fontResource = CreateFontResource(GetObsolutePath(L"Assets\\Fonts\\Roboto-Black.ttf"));
+        std::wstring fontPath = L"Fonts\arial.ttf";
+        size_t length = GetSystemWindowsDirectory(nullptr, 0);
+        std::wstring pathString(length, 0);
+        WCHAR fullPath[MAX_PATH];
+        size_t directoryResult = GetSystemWindowsDirectory(pathString.data(), static_cast(pathString.length()));
+        THROW_LAST_ERROR_IF(directoryResult == 0);
+        check_hresult(PathCchCombine(fullPath, ARRAYSIZE(fullPath), pathString.data(), fontPath.data()));
 
         AddTextToPage(xpsPage, text, fontResource, static_cast<float>(fontSize), xpsTextColorBrush, &textOrigin);
     }
