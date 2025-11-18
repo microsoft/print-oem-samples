@@ -13,14 +13,14 @@
 
   <Identity
     Name="0a8182cd-d3dd-4b8f-a41a-d39ed3f1a7bb"
-    Publisher="CN=pradeem"
+    Publisher="CN=Contoso"
     Version="1.0.3.0" />
 
   <mp:PhoneIdentity PhoneProductId="0a8182cd-d3dd-4b8f-a41a-d39ed3f1a7bb" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>VirtualPrinterAppSdk</DisplayName>
-    <PublisherDisplayName>absisay</PublisherDisplayName>
+    <PublisherDisplayName>Contoso</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
