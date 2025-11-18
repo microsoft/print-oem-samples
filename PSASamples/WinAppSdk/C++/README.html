@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="c-print-support-app-windows-app-sdk">C++ Print Support App (Windows App SDK)</h1>
+<ul>
+<li><a href="#c-print-support-app-windows-app-sdk">C++ Print Support App (Windows App SDK)</a>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#project-structure">Project Structure</a></li>
+<li><a href="#release-history">Release History</a></li>
+<li><a href="#remarks">Remarks</a></li>
+<li><a href="#resources">Resources</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>This sample demonstrates a Print Support App (PSA) implementation using C++/WinRT and the Windows App SDK (WinUI 3). The solution includes:</p>
+<ul>
+<li><strong>VirtualPrinterAppSdk</strong>: The main WinUI 3 application that provides printer settings UI, job activation handling, watermark preview, and workflow management.</li>
+<li><strong>BackgroundTasks</strong>: Windows Runtime component containing background tasks for print workflow processing, print support extension, and virtual printer operations.</li>
+<li><strong>XpsUtil</strong>: Utility library for XPS document manipulation, including watermarking and page processing.</li>
+</ul>
+<p>The app showcases modern print support capabilities including custom printer settings, XPS document manipulation, watermark application, and IPP attribute handling using the Windows App SDK framework.</p>
+<h2 id="project-structure">Project Structure</h2>
+<pre><code>C++/
+├── VirtualPrinterAppSdk/               # Main WinUI 3 application
+│   ├── App.xaml.*                      # Application entry point
+│   ├── MainWindow.xaml.*               # Main application window
+│   ├── UserLaunchMainPage.xaml.*       # User-launched settings UI
+│   ├── JobActivationMainPage.xaml.*    # Job-specific activation UI
+│   ├── PrinterSettings.xaml.*          # Printer configuration UI
+│   ├── WorkflowWatermarkSample.xaml.*  # Watermark workflow UI
+│   ├── WatermarkPreviewControl.xaml.*  # Watermark preview control
+│   ├── PreviewPaginationControl.xaml.* # Page navigation control
+│   ├── AppInfo.xaml.*                  # Application information page
+│   ├── ModalWindowHandler.*            # Modal window management
+│   ├── Package.appxmanifest            # App package manifest
+│   └── Assets/                         # Application assets
+│
+├── BackgroundTasks/                    # Windows Runtime component
+│   ├── PrintSupportExtension.*         # PSE background task
+│   ├── WorkflowBgTask.*                # Workflow background task
+│   ├── VirtualPrinterBgTask.*          # Virtual printer task
+│   ├── LocalStorageHelper.*            # Local storage utilities
+│   └── BackgroundTasks.def             # Module definition
+│
+└── XpsUtil/                            # XPS utilities
+    ├── XpsPageWatermarker.*            # Watermark application
+    ├── XpsPageWrapper.*                # XPS page manipulation
+    ├── XpsSequentialDocument.*         # Document processing
+    └── SynchronizedSequentialStream.*  # Stream handling
+</code></pre>
+<h2 id="release-history">Release History</h2>
+<details>
+<summary>Current Version (as of November 2025)</summary>
+<p>Initial Windows App SDK (WinUI 3) C++ implementation including:</p>
+<ul>
+<li>Migration from UWP to Windows App SDK framework</li>
+<li>WinUI 3 XAML UI implementation with modern controls</li>
+<li>C++/WinRT implementation of Print Support App functionality</li>
+<li>Background tasks for print workflow, PSE, and virtual printer operations</li>
+<li>XPS document manipulation and watermarking capabilities</li>
+<li>Preview rendering with pagination controls</li>
+<li>Custom IPP attribute support</li>
+<li>Multi-instance app support</li>
+<li>Modal window handling for print dialog scenarios</li>
+<li>Local storage helper for app data persistence</li>
+</ul>
+</details>
+<h2 id="remarks">Remarks</h2>
+<details>
+<ul>
+<li>This sample requires the Windows App SDK and is designed for Windows 10, version 2004 (build 19041) and later.</li>
+<li>The solution uses C++/WinRT projections for Windows Runtime APIs.</li>
+<li>IDL files define Windows Runtime classes, and the XAML compiler generates implementation headers.</li>
+<li>Background tasks run out-of-process to support multi-instance scenarios.</li>
+<li>The app demonstrates modern print support capabilities including:
+<ul>
+<li>Custom printer settings UI</li>
+<li>Print job workflow interception and modification</li>
+<li>XPS document watermarking</li>
+<li>IPP attribute manipulation</li>
+<li>Preview rendering with real-time updates</li>
+</ul>
+</li>
+<li>Build the project at least once to generate implementation templates under the &quot;Generated Files&quot; folder.</li>
+<li>The VirtualPrinterAppSdk project includes NuGet packages for Windows App SDK and Windows Implementation Library (WIL).</li>
+</ul>
+<p><strong>Building the Solution:</strong></p>
+<ol>
+<li>Open <code>VirtualPrinterAppSdk.sln</code> in Visual Studio 2022 or later</li>
+<li>Restore NuGet packages</li>
+<li>Build the solution (this generates C++/WinRT headers from IDL files)</li>
+<li>Deploy and run the application</li>
+</ol>
+<p><strong>Manifest Requirements:</strong></p>
+<ul>
+<li>The <code>Package.appxmanifest</code> must declare the following extensions:
+<ul>
+<li><code>windows.printSupportExtension</code> - For printer capabilities management</li>
+<li><code>windows.printSupportWorkflow</code> - For print job workflow handling</li>
+<li><code>windows.printSupportSettingsUI</code> - For printer settings UI</li>
+<li><code>windows.printSupportJobUI</code> - For job-specific UI</li>
+</ul>
+</li>
+<li>Required capabilities:
+<ul>
+<li><code>privateNetworkClientServer</code> - For IPP communication</li>
+<li>Multi-instance support via <code>uap10:SupportsMultipleInstances=&quot;true&quot;</code></li>
+</ul>
+</li>
+</ul>
+</details>
+<h2 id="resources">Resources</h2>
+<ul>
+<li><a href="https://docs.microsoft.com/windows/apps/windows-app-sdk/">Windows App SDK Documentation</a></li>
+<li><a href="https://docs.microsoft.com/windows/apps/winui/winui3/">WinUI 3 Documentation</a></li>
+<li><a href="https://docs.microsoft.com/windows/uwp/cpp-and-winrt-apis/">C++/WinRT</a></li>
+<li><a href="https://docs.microsoft.com/windows/uwp/devices-sensors/print-support-app">Print Support App Overview</a></li>
+<li><a href="https://docs.microsoft.com/uwp/api/windows.graphics.printing.printticket">Windows.Graphics.Printing.PrintTicket</a></li>
+<li><a href="https://github.com/microsoft/wil">Windows Implementation Library (WIL)</a></li>
+<li><a href="https://docs.microsoft.com/windows-hardware/drivers/install/using-an-extension-inf-file">Using an Extension INF File</a></li>
+<li><a href="https://www.iana.org/assignments/ipp-registrations/ipp-registrations.xhtml">IPP Attributes</a></li>
+</ul>
+
+</body>
+</html>
