@@ -3,6 +3,7 @@
 #include "XpsPageWatermarker.g.cpp"
 #include <XpsPageWrapper.h>
 #include <wil/result.h>
+#include <pathcch.h>
 
 namespace winrt::XpsUtil::implementation
 {
@@ -151,11 +152,9 @@ namespace winrt::XpsUtil::implementation
         size_t length = GetSystemWindowsDirectory(nullptr, 0);
         std::wstring pathString(length, 0);
         WCHAR fullPath[MAX_PATH];
-        size_t directoryResult = GetSystemWindowsDirectory(pathString.data(), static_cast(pathString.length()));
+        size_t directoryResult = GetSystemWindowsDirectory(pathString.data(), static_cast<float>(pathString.length()));
         THROW_LAST_ERROR_IF(directoryResult == 0);
         check_hresult(PathCchCombine(fullPath, ARRAYSIZE(fullPath), pathString.data(), fontPath.data()));
-
-        AddTextToPage(xpsPage, text, fontResource, static_cast<float>(fontSize), xpsTextColorBrush, &textOrigin);
     }
 
     void XpsPageWatermarker::AddWatermarkImage(com_ptr<IXpsOMPage> const& xpsPage)
