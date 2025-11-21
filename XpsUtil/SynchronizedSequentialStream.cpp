@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "SynchronizedSequentialStream.h"
-#include <algorithm> 
+#include <algorithm>
 
 using namespace winrt::Windows::Storage::Streams;
 using namespace winrt::Windows::Security::Cryptography;
@@ -15,19 +15,19 @@ namespace winrt::XpsUtil::implementation
         m_outputStream = m_storage.GetOutputStreamAt(0);
     }
 
-    HRESULT SynchronizedSequentialStream::Read(void* pv, ULONG cb, ULONG* pcbRead)
+    STDMETHODIMP SynchronizedSequentialStream::Read([[maybe_unused]] void* pv, [[maybe_unused]] ULONG cb, [[maybe_unused]] ULONG* pcbRead)
     {
         return E_NOTIMPL;
     }
 
-    HRESULT SynchronizedSequentialStream::Write(const void* pv, ULONG cb, ULONG* pcbWritten) noexcept try
+    STDMETHODIMP SynchronizedSequentialStream::Write(const void* pv, ULONG cb, ULONG* pcbWritten) noexcept try
     {
         IBuffer buf = CryptographicBuffer::CreateFromByteArray(
                          std::vector<BYTE>(static_cast<BYTE*>(const_cast<void*>(pv)), static_cast<BYTE*>(const_cast<void*>(pv)) + cb));
 
         {
             auto lock = m_streamAccess.LockExclusive();
-            auto progress = m_outputStream.WriteAsync(buf).get();
+            m_outputStream.WriteAsync(buf).get();
         }
 
         SetEvent(m_streamWritten.get());
@@ -49,7 +49,7 @@ namespace winrt::XpsUtil::implementation
 
         auto lock = m_streamAccess.LockExclusive();
         auto inputSteam = m_storage.GetInputStreamAt(m_readIndex);
-        uint64_t bytesToRead = (count < bytesAvailable) ? count : bytesAvailable;
+        uint32_t bytesToRead = (count < bytesAvailable) ? count : static_cast<uint32_t>(bytesAvailable);
         retBuffer = inputSteam.ReadAsync(buffer, bytesToRead, options).get();
 
         m_readIndex += bytesToRead;
@@ -57,11 +57,10 @@ namespace winrt::XpsUtil::implementation
         co_return retBuffer;
     }
 
-    uint64_t SynchronizedSequentialStream::WaitForXBytes(uint64_t noOfbytes)
+    uint64_t SynchronizedSequentialStream::WaitForXBytes(uint64_t noOfBytes)
     {
-
-        size_t bytesAvailable = GetAvailableBytesToRead();
-        while ((noOfbytes > bytesAvailable) && !m_streamClosed)
+        uint64_t bytesAvailable = GetAvailableBytesToRead();
+        while ((noOfBytes > bytesAvailable) && !m_streamClosed)
         {
             DWORD waitReturn = ::WaitForSingleObject(m_streamWritten.get(), INFINITE);
             if (waitReturn != WAIT_OBJECT_0)

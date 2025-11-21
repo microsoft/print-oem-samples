@@ -245,7 +245,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
 
         return numberBox;
     }
-    void PrinterSettings::PrintTicketFeatureComboBoxSelectionChanged(IInspectable const& sender, SelectionChangedEventArgs e)
+    void PrinterSettings::PrintTicketFeatureComboBoxSelectionChanged(IInspectable const& sender, SelectionChangedEventArgs /*e*/)
     {
         auto comboBox = sender.try_as<ComboBox>();
         auto feature = comboBox.DataContext().try_as<PrintTicketFeature>();
@@ -259,7 +259,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
         comboBox.IsEnabled(true);
     }
 
-    void PrinterSettings::PrintTicketParameterNumberBoxValueChanged(NumberBox numberBox, NumberBoxValueChangedEventArgs e)
+    void PrinterSettings::PrintTicketParameterNumberBoxValueChanged(NumberBox numberBox, NumberBoxValueChangedEventArgs /*e*/)
     {
         auto param = numberBox.DataContext().try_as<PrintTicketParameterInitializer>();
 

@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualPrinterAppSdk", "Vir
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BackgroundTasks", "..\BackgroundTasks\BackgroundTasks.vcxproj", "{48DFE358-23D3-407D-B424-5B573EB6C2BE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XpsUtil", "..\XpsUtil\XpsUtil.vcxproj", "{7B77CF65-1283-4417-8BE7-299651392E71}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XpsUtil", "..\..\..\..\XpsUtil\XpsUtil.vcxproj", "{7B77CF65-1283-4417-8BE7-299651392E71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

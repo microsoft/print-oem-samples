@@ -107,7 +107,7 @@ void App::OnLaunched(winrt::LaunchActivatedEventArgs const&)
     }
 }
 
-void App::OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs args)
+void App::OnActivated(Windows::ApplicationModel::Activation::IActivatedEventArgs /*args*/)
 {
     window = make<MainWindow>();
     window.Activate();

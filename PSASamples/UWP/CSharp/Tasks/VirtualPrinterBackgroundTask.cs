@@ -7,7 +7,6 @@ using Windows.ApplicationModel.Background;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation.Metadata;
 using Windows.Graphics.Printing.PrintSupport;
-using System.Collections.Generic;
 using Windows.Graphics.Printing.Workflow;
 using Windows.Graphics.Printing.PrintTicket;
 

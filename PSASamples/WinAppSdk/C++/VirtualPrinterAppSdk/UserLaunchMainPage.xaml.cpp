@@ -21,7 +21,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
         InitializeComponent();
     }
 
-    void UserLaunchMainPage::NavViewItemInvoked(Microsoft::UI::Xaml::Controls::NavigationView sender, Microsoft::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs args)
+    void UserLaunchMainPage::NavViewItemInvoked(Microsoft::UI::Xaml::Controls::NavigationView /*sender*/, Microsoft::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs args)
     {
         auto tagg = args.InvokedItemContainer().Tag().try_as<winrt::hstring>();
         if (tagg == L"GetIppPrinterUrl")

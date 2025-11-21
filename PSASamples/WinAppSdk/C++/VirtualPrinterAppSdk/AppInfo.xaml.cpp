@@ -23,7 +23,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
         InitializeComponent();
     }
 
-    void AppInfo::OnNavigatedTo(NavigationEventArgs e)
+    void AppInfo::OnNavigatedTo(NavigationEventArgs /*e*/)
     {
         PackageFamilyNameTextBox().Text(Package::Current().Id().FamilyName());
     }

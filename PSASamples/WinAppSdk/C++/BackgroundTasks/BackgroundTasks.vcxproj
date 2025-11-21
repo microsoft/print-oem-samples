@@ -170,7 +170,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XpsUtil\XpsUtil.vcxproj">
+    <ProjectReference Include="..\..\..\..\XpsUtil\XpsUtil.vcxproj">
       <Project>{7b77cf65-1283-4417-8be7-299651392e71}</Project>
     </ProjectReference>
   </ItemGroup>

@@ -23,7 +23,7 @@ namespace XpsUtil
 
         void StartXpsOMGeneration();
         Windows.Storage.Streams.IInputStream GetWatermarkedStream(XpsPageWatermarker watermarker);
-        
+
         XpsPageWrapper GetPage(UInt32 pageNumber);
         UInt32 PageCount();
 

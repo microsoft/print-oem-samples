@@ -66,13 +66,13 @@ namespace winrt::VirtualPrinterAppSdk::implementation
         }
     }
 
-    void JobActivationMainPage::OnSessionJobNotification(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobUISession sender,
-        winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobNotificationEventArgs args)
+    void JobActivationMainPage::OnSessionJobNotification(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobUISession /*sender*/,
+        winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobNotificationEventArgs /*args*/)
     {
        // TODO need to be implemented
     }
 
-    void JobActivationMainPage::OnSessionPdlDataAvailable(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobUISession sender,
+    void JobActivationMainPage::OnSessionPdlDataAvailable(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobUISession /*sender*/,
         winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowPdlDataAvailableEventArgs args)
     {
         m_activationKind = JobActivationKind::WorkflowPdl;
@@ -81,7 +81,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
         NavigateToPreview();
     }
 
-    void JobActivationMainPage::OnVirtualPdlDataAvailable(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobUISession sender,
+    void JobActivationMainPage::OnVirtualPdlDataAvailable(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobUISession /*sender*/,
         winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowVirtualPrinterUIEventArgs args)
     {
         m_activationKind = JobActivationKind::WorkflowVirtualPrinterPdl;

@@ -1,0 +1,18 @@
+PUBLIC_PASS0_CONSUMES= \
+    onecore\com\published\winrt\foundation|PASS0 \
+    onecore\redist\mspartners\netfx45\core\binary_release|PASS0 \
+    onecoreuap\merged\winmetadata\internalmetadata|PASS0 \
+    onecoreuap\merged\winmetadata\sdkmetadata|PASS0 \
+
+PUBLIC_PASS1_CONSUMES= \
+    minkernel\apiset\libs\ucrt\lib|PASS1 \
+    minkernel\apiset\libs\ucrt\lib_private|PASS1 \
+    minkernel\crts\crtw32\linkopts\ucrt_dbgcrt_shims|PASS1 \
+    minkernel\crts\ucrt\devdiv\stl\src\md_lib|PASS1 \
+    minkernel\crts\ucrt\devdiv\vcstartup\src\lib\md|PASS1 \
+    minkernel\crts\ucrt\devdiv\vcstartup\src\linkopts\mt_legacy_stdio_definitions|PASS1 \
+    minkernel\crts\ucrt\devdiv\vcstartup\src\linkopts\mt_legacy_stdio_msvcrt_compatibility|PASS1 \
+    minkernel\crts\ucrt\devdiv\vcstartup\src\linkopts\mt_legacy_stdio_wide_specifiers|PASS1 \
+    minkernel\crts\ucrt\src\appcrt\dll\osmode_function_map|PASS1 \
+    minkernel\tools\guard_support|PASS1 \
+

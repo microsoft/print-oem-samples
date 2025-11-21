@@ -2,11 +2,9 @@
 #include "XpsPageWatermarker.h"
 #include "XpsPageWatermarker.g.cpp"
 #include <XpsPageWrapper.h>
+#include <wil/result.h>
 #include "strsafe.h"
 #include "pathcch.h"
-
-using namespace std;
-
 
 namespace winrt::XpsUtil::implementation
 {
@@ -70,7 +68,7 @@ namespace winrt::XpsUtil::implementation
     }
 
     /// <summary>
-    /// Sets whether to apply a watermark image. If false, 
+    /// Sets whether to apply a watermark image. If false,
     /// </summary>
     /// <param name="enabled"></param>
     void XpsPageWatermarker::SetWatermarkImageEnabled(bool enabled)
@@ -125,6 +123,21 @@ namespace winrt::XpsUtil::implementation
         check_hresult(pageVisuals->Append(xpsGlyphs.get()));
     }
 
+    std::wstring GetObsolutePath(std::wstring const& relativePath)
+    {
+        wil::unique_hmodule currentModule;
+        THROW_IF_WIN32_BOOL_FALSE(GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, reinterpret_cast<LPCWSTR>(&GetObsolutePath), &currentModule));
+
+        wchar_t filePath[MAX_PATH];
+        DWORD res = GetModuleFileName(currentModule.get(), filePath, MAX_PATH);
+        THROW_LAST_ERROR_IF(res == 0);
+
+        std::wstring expectedPath = filePath;
+        expectedPath = expectedPath.substr(0, expectedPath.find_last_of(L'\\') + 1);
+        std::wstring fontFilePath = expectedPath + relativePath;
+        return fontFilePath;
+    }
+
     void XpsPageWatermarker::AddTextToPage(com_ptr<IXpsOMPage> const& xpsPage, std::wstring const& text, double fontSize, double xRelativeOffset, double yRelativeOffset)
     {
         // Create the color brush for the font.
@@ -141,21 +154,18 @@ namespace winrt::XpsUtil::implementation
         check_hresult(xpsPage->GetPageDimensions(&pageDimensions));
         XPS_POINT textOrigin = { pageDimensions.width * static_cast<float>(xRelativeOffset), pageDimensions.height * static_cast<float>(yRelativeOffset) };
 
-        //Get arial font from system
         std::wstring fontPath = L"Fonts\\arial.ttf";
-        unsigned int length = GetSystemWindowsDirectory(nullptr, 0);
+        size_t length = GetSystemWindowsDirectory(nullptr, 0);
         std::wstring pathString(length, 0);
         WCHAR fullPath[MAX_PATH];
-        int directoryResult = GetSystemWindowsDirectory(pathString.data(), pathString.length());
+        size_t directoryResult = GetSystemWindowsDirectory(pathString.data(), static_cast<UINT>(pathString.length()));
 
-        if (!GetSystemWindowsDirectory || directoryResult == 0)
-        {
-            throw_hresult(HRESULT_FROM_WIN32(GetLastError()));
-        }
+        THROW_LAST_ERROR_IF(directoryResult == 0);
 
         check_hresult(PathCchCombine(fullPath, ARRAYSIZE(fullPath), pathString.data(), fontPath.data()));
-        
-        auto fontResource = CreateFontResource(fullPath); 
+
+        auto fontResource = CreateFontResource(fullPath);
+
         AddTextToPage(xpsPage, text, fontResource, static_cast<float>(fontSize), xpsTextColorBrush, &textOrigin);
     }
 
@@ -183,7 +193,7 @@ namespace winrt::XpsUtil::implementation
             XPS_RECT rectForImage = { 0, 0, pageDimensions.width / 10, pageDimensions.height / 10 };
 
             com_ptr<IXpsOMImageResource> imageResource;
-            check_hresult(CreateImageResource(imageFileName, imagePartName, imageResource.put()));
+            check_hresult(CreateImageResource(GetObsolutePath(imageFileName), imagePartName, imageResource.put()));
             check_hresult(AddImageToVisualCollection(
                 xpsPage,
                 imageResource.get(),

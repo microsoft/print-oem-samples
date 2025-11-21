@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintSupportApp", "PrintSup
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks", "..\Tasks\Tasks.csproj", "{1A3C9BCF-12B9-4A5F-B84D-0372E86FFFE6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XpsUtil", "..\XpsUtil\XpsUtil.vcxproj", "{7B77CF65-1283-4417-8BE7-299651392E71}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XpsUtil", "..\..\..\..\XpsUtil\XpsUtil.vcxproj", "{7B77CF65-1283-4417-8BE7-299651392E71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

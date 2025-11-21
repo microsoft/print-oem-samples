@@ -304,7 +304,7 @@
     <ProjectReference Include="..\BackgroundTasks\BackgroundTasks.vcxproj">
       <Project>{48dfe358-23d3-407d-b424-5b573eb6c2be}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\XpsUtil\XpsUtil.vcxproj">
+    <ProjectReference Include="..\..\..\..\XpsUtil\XpsUtil.vcxproj">
       <Project>{7b77cf65-1283-4417-8be7-299651392e71}</Project>
     </ProjectReference>
   </ItemGroup>
