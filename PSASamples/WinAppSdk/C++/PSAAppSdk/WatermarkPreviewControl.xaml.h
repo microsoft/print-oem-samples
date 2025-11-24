@@ -5,7 +5,7 @@
 #include <winrt/Microsoft.UI.Xaml.Media.Imaging.h>
 #include <functional>
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     struct WatermarkPreviewControl : WatermarkPreviewControlT<WatermarkPreviewControl>
     {
@@ -36,7 +36,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
     };
 }
 
-namespace winrt::VirtualPrinterAppSdk::factory_implementation
+namespace winrt::PSAAppSdk::factory_implementation
 {
     struct WatermarkPreviewControl : WatermarkPreviewControlT<WatermarkPreviewControl, implementation::WatermarkPreviewControl>
     {

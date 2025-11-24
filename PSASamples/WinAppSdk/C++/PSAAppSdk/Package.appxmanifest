@@ -19,7 +19,7 @@
   <mp:PhoneIdentity PhoneProductId="0a8182cd-d3dd-4b8f-a41a-d39ed3f1a7bb" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>VirtualPrinterAppSdk</DisplayName>
+    <DisplayName>PSAAppSdk</DisplayName>
     <PublisherDisplayName>Contoso</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -39,8 +39,8 @@
       EntryPoint="$targetentrypoint$"
       uap10:SupportsMultipleInstances="true">
       <uap:VisualElements
-        DisplayName="VirtualPrinterAppSdk"
-        Description="VirtualPrinterAppSdk"
+        DisplayName="PSAAppSdk"
+        Description="PSAAppSdk"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
@@ -48,7 +48,7 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
-        <printsupport:Extension Category="windows.printSupportSettingsUI" EntryPoint="VirtualPrinterAppSdk.App"/>
+        <printsupport:Extension Category="windows.printSupportSettingsUI" EntryPoint="PSAAppSdk.App"/>
         <printsupport:Extension Category="windows.printSupportWorkflow" EntryPoint="BackgroundTasks.WorkflowBgTask"/>
         <printsupport:Extension Category="windows.printSupportExtension" EntryPoint="BackgroundTasks.PrintSupportExtension"/>
         <printsupport2:Extension Category="windows.printSupportVirtualPrinterWorkflow" EntryPoint="BackgroundTasks.VirtualPrinterBgTask">

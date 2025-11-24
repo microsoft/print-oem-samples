@@ -1,4 +1,4 @@
-namespace VirtualPrinterAppSdk
+namespace PSAAppSdk
 {
     [default_interface]
     runtimeclass WatermarkPreviewControl : Microsoft.UI.Xaml.Controls.UserControl

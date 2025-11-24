@@ -3,7 +3,7 @@
 #include "WorkflowWatermarkSample.g.h"
 #include <winrt/XpsUtil.h>
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     struct WatermarkOptions
     {
@@ -82,12 +82,12 @@ namespace winrt::VirtualPrinterAppSdk::implementation
         XpsUtil::XpsSequentialDocument m_xpsDocument{ nullptr };
         XpsUtil::XpsPageWatermarker m_waterMarker;
         WatermarkOptions m_waterMarkOptions;
-        winrt::VirtualPrinterAppSdk::JobActivationMainPage m_jobMainPage;
+        winrt::PSAAppSdk::JobActivationMainPage m_jobMainPage;
         std::atomic<bool> m_gotFirstPage{ false };
     };
 }
 
-namespace winrt::VirtualPrinterAppSdk::factory_implementation
+namespace winrt::PSAAppSdk::factory_implementation
 {
     struct WorkflowWatermarkSample : WorkflowWatermarkSampleT<WorkflowWatermarkSample, implementation::WorkflowWatermarkSample>
     {

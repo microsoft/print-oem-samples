@@ -2,7 +2,7 @@
 
 #include "JobActivationMainPage.g.h"
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     struct JobActivationMainPage : JobActivationMainPageT<JobActivationMainPage>
     {
@@ -40,7 +40,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
                 winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowPdlDataAvailableEventArgs args);
         void OnVirtualPdlDataAvailable(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobUISession sender,
             winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowVirtualPrinterUIEventArgs args);
-        winrt::Windows::Foundation::IAsyncAction StartAsync(winrt::VirtualPrinterAppSdk::MainWindow mainWindow);
+        winrt::Windows::Foundation::IAsyncAction StartAsync(winrt::PSAAppSdk::MainWindow mainWindow);
         winrt::fire_and_forget NavigateToPreview();
 
         Microsoft::UI::Windowing::AppWindow m_appWindow{ nullptr };
@@ -55,7 +55,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
     };
 }
 
-namespace winrt::VirtualPrinterAppSdk::factory_implementation
+namespace winrt::PSAAppSdk::factory_implementation
 {
     struct JobActivationMainPage : JobActivationMainPageT<JobActivationMainPage, implementation::JobActivationMainPage>
     {

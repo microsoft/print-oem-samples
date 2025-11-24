@@ -241,7 +241,7 @@
       <Project>{1a3c9bcf-12b9-4a5f-b84d-0372e86fffe6}</Project>
       <Name>Tasks</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\XpsUtil\XpsUtil.vcxproj">
+    <ProjectReference Include="..\..\..\XpsUtil\XpsUtil.vcxproj">
       <Project>{7b77cf65-1283-4417-8be7-299651392e71}</Project>
       <Name>XpsUtil</Name>
     </ProjectReference>

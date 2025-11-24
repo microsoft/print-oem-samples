@@ -5,7 +5,7 @@
 
 #include "AppInfo.g.h"
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     struct AppInfo : AppInfoT<AppInfo>
     {
@@ -16,7 +16,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
     };
 }
 
-namespace winrt::VirtualPrinterAppSdk::factory_implementation
+namespace winrt::PSAAppSdk::factory_implementation
 {
     struct AppInfo : AppInfoT<AppInfo, implementation::AppInfo>
     {

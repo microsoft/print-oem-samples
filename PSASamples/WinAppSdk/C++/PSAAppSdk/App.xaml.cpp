@@ -49,8 +49,8 @@ namespace winrt
     using namespace Windows::UI;
     using namespace Windows::System;
     using namespace XpsUtil;
-    using namespace VirtualPrinterAppSdk;
-    using namespace VirtualPrinterAppSdk::implementation;
+    using namespace PSAAppSdk;
+    using namespace PSAAppSdk::implementation;
 }
 
 using namespace winrt;
@@ -90,7 +90,7 @@ void App::OnLaunched(winrt::LaunchActivatedEventArgs const&)
     {
         auto settingsArgs = args.as<winrt::PrintSupportSettingsActivatedEventArgs>();
         winrt::Microsoft::UI::WindowId OwnerWindowId{ settingsArgs.OwnerWindowId().Value };
-        auto printerSettingsPage = winrt::make<winrt::VirtualPrinterAppSdk::implementation::PrinterSettings>(settingsArgs);
+        auto printerSettingsPage = winrt::make<winrt::PSAAppSdk::implementation::PrinterSettings>(settingsArgs);
         auto modalWindowHandler = winrt::make_self<ModalWindowHandler>(OwnerWindowId, printerSettingsPage);
         modalWindowHandler->Activate();
     }

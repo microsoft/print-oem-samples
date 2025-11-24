@@ -1,7 +1,7 @@
 #pragma once
 #include <winrt/Microsoft.UI.Xaml.Hosting.h>
 #include "PrinterSettings.g.h"
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
 	struct ModalWindowHandler : public winrt::implements<ModalWindowHandler, ::IUnknown>
 	{

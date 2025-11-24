@@ -14,7 +14,7 @@ using namespace Windows::Foundation;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     UserLaunchMainPage::UserLaunchMainPage()
     {
@@ -26,11 +26,11 @@ namespace winrt::VirtualPrinterAppSdk::implementation
         auto tagg = args.InvokedItemContainer().Tag().try_as<winrt::hstring>();
         if (tagg == L"GetIppPrinterUrl")
         {
-            contentFrame().Navigate(xaml_typename<VirtualPrinterAppSdk::AppInfo>(), args);
+            contentFrame().Navigate(xaml_typename<PSAAppSdk::AppInfo>(), args);
         }
         else
         {
-            contentFrame().Navigate(xaml_typename<VirtualPrinterAppSdk::AppInfo>(), args);
+            contentFrame().Navigate(xaml_typename<PSAAppSdk::AppInfo>(), args);
         }
     }
 
@@ -38,12 +38,12 @@ namespace winrt::VirtualPrinterAppSdk::implementation
     {
         // NavView doesn't load any page by default, so load the first page.
         NavigationViewControl().SelectedItem(NavigationViewControl().MenuItems().First());
-        contentFrame().Navigate(xaml_typename < VirtualPrinterAppSdk::AppInfo>(), e);
+        contentFrame().Navigate(xaml_typename < PSAAppSdk::AppInfo>(), e);
     }
 
     void UserLaunchMainPage::OnNavigatedTo(Microsoft::UI::Xaml::Navigation::NavigationEventArgs e)
     {
         NavigationViewControl().SelectedItem(NavigationViewControl().MenuItems().First());
-        contentFrame().Navigate(xaml_typename < VirtualPrinterAppSdk::AppInfo>(), e);
+        contentFrame().Navigate(xaml_typename < PSAAppSdk::AppInfo>(), e);
     }
 }

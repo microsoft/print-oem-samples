@@ -152,7 +152,7 @@ namespace winrt::BackgroundTasks::implementation
         values.Insert(EnablePsaCustomToast, winrt::box_value(enablePsaCustomToast));
     }
 
-    void LocalStorageHelper::SaveCustomIppAttributesToLocalStorage(Windows::Foundation::Collections::IMap<hstring, Windows::Devices::Printers::IppAttributeValue> attributes)
+    void LocalStorageHelper::SaveCustomIppAttributesToLocalStorage(Windows::Foundation::Collections::IMap<hstring, Windows::Devices::Printers::IppAttributeValue> /*attributes*/)
     {
         throw winrt::hresult_not_implemented();
     }

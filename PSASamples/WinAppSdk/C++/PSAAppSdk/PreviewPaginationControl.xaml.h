@@ -2,7 +2,7 @@
 
 #include "PreviewPaginationControl.g.h"
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     struct PreviewPaginationControl : PreviewPaginationControlT<PreviewPaginationControl>
     {
@@ -40,7 +40,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
     };
 }
 
-namespace winrt::VirtualPrinterAppSdk::factory_implementation
+namespace winrt::PSAAppSdk::factory_implementation
 {
     struct PreviewPaginationControl : PreviewPaginationControlT<PreviewPaginationControl, implementation::PreviewPaginationControl>
     {

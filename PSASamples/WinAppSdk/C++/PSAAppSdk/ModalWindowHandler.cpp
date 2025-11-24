@@ -41,11 +41,11 @@ namespace winrt
     using namespace Windows::Graphics::Printing::PrintSupport;
     using namespace Windows::Graphics::Printing::Workflow;
     using namespace Windows::UI;
-    using namespace VirtualPrinterAppSdk;
-    using namespace VirtualPrinterAppSdk::implementation;
+    using namespace PSAAppSdk;
+    using namespace PSAAppSdk::implementation;
 }
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
 	ModalWindowHandler::ModalWindowHandler(winrt::Microsoft::UI::WindowId const& ownerwindowId, winrt::Microsoft::UI::Xaml::UIElement const& xamlElement)
         : m_xamlElement(xamlElement)

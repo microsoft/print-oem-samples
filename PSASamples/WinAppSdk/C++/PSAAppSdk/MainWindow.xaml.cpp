@@ -30,14 +30,14 @@ using namespace Microsoft::UI::Xaml::Controls;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     MainWindow::MainWindow()
     {
         InitializeComponent();
         m_appWindow = GetAppWindowForCurrentWindow();
         
-        rootFrame().Navigate(xaml_typename<VirtualPrinterAppSdk::UserLaunchMainPage>());
+        rootFrame().Navigate(xaml_typename<PSAAppSdk::UserLaunchMainPage>());
     }
 
     MainWindow::MainWindow(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobActivatedEventArgs args) : m_workflowActivatedArgs(args)
@@ -49,14 +49,14 @@ namespace winrt::VirtualPrinterAppSdk::implementation
         if (m_workflowActivatedArgs)
         {
             m_appWindow = GetAppWindowForCurrentWindow();
-            rootFrame().Navigate(xaml_typename<VirtualPrinterAppSdk::JobActivationMainPage>(), *this);
+            rootFrame().Navigate(xaml_typename<PSAAppSdk::JobActivationMainPage>(), *this);
         }
     }
 
     AppWindow MainWindow::GetAppWindowForCurrentWindow()
     {      
         // Get access to IWindowNative
-        winrt::VirtualPrinterAppSdk::MainWindow thisWindow = *this;
+        winrt::PSAAppSdk::MainWindow thisWindow = *this;
         winrt::com_ptr<IWindowNative> windowNative = thisWindow.as<IWindowNative>();
 
         //Get the HWND for the XAML Window

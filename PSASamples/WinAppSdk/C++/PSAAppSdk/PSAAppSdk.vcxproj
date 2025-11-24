@@ -18,8 +18,8 @@
     <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
     <MinimalCoreWin>true</MinimalCoreWin>
     <ProjectGuid>{18515adc-aff9-44a2-879e-4d84648dc9eb}</ProjectGuid>
-    <ProjectName>VirtualPrinterAppSdk</ProjectName>
-    <RootNamespace>VirtualPrinterAppSdk</RootNamespace>
+    <ProjectName>PSAAppSdk</ProjectName>
+    <RootNamespace>PSAAppSdk</RootNamespace>
     <!--
       $(TargetName) should be same as $(RootNamespace) so that the produced binaries (.exe/.pri/etc.)
       have a name that matches the .winmd
@@ -32,7 +32,7 @@
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.26085.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformMinVersion>10.0.17763.0</WindowsTargetPlatformMinVersion>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
@@ -64,7 +64,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <DesktopCompatible>true</DesktopCompatible>
@@ -87,7 +87,7 @@
   <PropertyGroup Label="UserMacros">
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateKeyFile>VirtualPrinterAppSdk_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>PSAAppSdk_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
@@ -107,7 +107,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
-      <PreprocessorDefinitions>_DEBUG;WINRT_DIAGNOSTICS;DISABLE_XAML_GENERATED_MAIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
@@ -173,14 +173,17 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
+    <ApplicationDefinition Include="App.xaml">
+    </ApplicationDefinition>
     <Page Include="AppInfo.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="JobActivationMainPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MainWindow.xaml" />
+    <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="PreviewPaginationControl.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -304,7 +307,7 @@
     <ProjectReference Include="..\BackgroundTasks\BackgroundTasks.vcxproj">
       <Project>{48dfe358-23d3-407d-b424-5b573eb6c2be}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\XpsUtil\XpsUtil.vcxproj">
+    <ProjectReference Include="..\..\..\XpsUtil\XpsUtil.vcxproj">
       <Project>{7b77cf65-1283-4417-8be7-299651392e71}</Project>
     </ProjectReference>
   </ItemGroup>
@@ -316,7 +319,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="VirtualPrinterAppSdk_TemporaryKey.pfx" />
+    <None Include="PSAAppSdk_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Assets\Fonts\Roboto-Black.ttf" />
@@ -328,6 +331,9 @@
   -->
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

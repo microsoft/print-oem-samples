@@ -5,7 +5,7 @@
 
 #include "App.xaml.g.h"
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     struct App : AppT<App>
     {

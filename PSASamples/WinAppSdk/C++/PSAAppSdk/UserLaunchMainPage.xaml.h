@@ -5,7 +5,7 @@
 
 #include "UserLaunchMainPage.g.h"
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     struct UserLaunchMainPage : UserLaunchMainPageT<UserLaunchMainPage>
     {
@@ -17,7 +17,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
     };
 }
 
-namespace winrt::VirtualPrinterAppSdk::factory_implementation
+namespace winrt::PSAAppSdk::factory_implementation
 {
     struct UserLaunchMainPage : UserLaunchMainPageT<UserLaunchMainPage, implementation::UserLaunchMainPage>
     {

@@ -21,11 +21,11 @@ using namespace winrt::Windows::Graphics::Printing::Workflow;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     void WorkflowWatermarkSample::OnNavigatedTo(winrt::Microsoft::UI::Xaml::Navigation::NavigationEventArgs e)
     {
-        m_jobMainPage = e.Parameter().as<winrt::VirtualPrinterAppSdk::JobActivationMainPage>();
+        m_jobMainPage = e.Parameter().as<winrt::PSAAppSdk::JobActivationMainPage>();
         if (m_jobMainPage.ActivationKind() == JobActivationKind::WorkflowPdl)
         {
             auto args = m_jobMainPage.PdlDataEventArgs();
@@ -46,7 +46,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
         DataContext(*this);
         BackgroundTasks::LocalStorageHelper::ResetWatermarkTextAndImage();
         FetchImageAttributesAsync();
-        auto waterMarkPreview = winrt::get_self<winrt::VirtualPrinterAppSdk::implementation::WatermarkPreviewControl>(WatermarkPreview());
+        auto waterMarkPreview = winrt::get_self<winrt::PSAAppSdk::implementation::WatermarkPreviewControl>(WatermarkPreview());
         waterMarkPreview->SetPagePreviewHandler([this](XpsUtil::XpsPageWrapper previewPage)
             {
                 ApplyModificationsToPreview(previewPage);

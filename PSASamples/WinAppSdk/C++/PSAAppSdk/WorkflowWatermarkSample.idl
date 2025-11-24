@@ -1,4 +1,4 @@
-namespace VirtualPrinterAppSdk
+namespace PSAAppSdk
 {
     [default_interface]
     runtimeclass WorkflowWatermarkSample : Microsoft.UI.Xaml.Controls.Page

@@ -10,7 +10,7 @@ using namespace Microsoft::UI::Xaml;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     winrt::event_token WatermarkPreviewControl::WatermarkPreviewTapped(winrt::Microsoft::UI::Xaml::Input::TappedEventHandler const& handler)
     {

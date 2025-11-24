@@ -96,7 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="VirtualPrinterAppSdk_TemporaryKey.pfx" />
+    <None Include="PSAAppSdk_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Assets\Fonts\Roboto-Black.ttf">

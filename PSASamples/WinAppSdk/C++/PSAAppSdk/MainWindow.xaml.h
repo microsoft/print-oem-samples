@@ -6,7 +6,7 @@
 #include "MainWindow.g.h"
 #include <winrt/Windows.Graphics.Printing.Workflow.h>
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     struct MainWindow : MainWindowT<MainWindow>
     {
@@ -26,7 +26,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
     };
 }
 
-namespace winrt::VirtualPrinterAppSdk::factory_implementation
+namespace winrt::PSAAppSdk::factory_implementation
 {
     struct MainWindow : MainWindowT<MainWindow, implementation::MainWindow>
     {

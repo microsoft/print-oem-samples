@@ -12,7 +12,7 @@ using namespace winrt::Microsoft::UI::Windowing;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
 	void JobActivationMainPage::OnNavigatedTo(winrt::Microsoft::UI::Xaml::Navigation::NavigationEventArgs e)
 	{
@@ -39,7 +39,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
         JobActivationMainPageT::InitializeComponent();
     }
 
-    winrt::Windows::Foundation::IAsyncAction JobActivationMainPage::StartAsync(winrt::VirtualPrinterAppSdk::MainWindow mainWindow)
+    winrt::Windows::Foundation::IAsyncAction JobActivationMainPage::StartAsync(winrt::PSAAppSdk::MainWindow mainWindow)
     {
         co_await winrt::resume_background();
         
@@ -93,6 +93,6 @@ namespace winrt::VirtualPrinterAppSdk::implementation
     winrt::fire_and_forget JobActivationMainPage::NavigateToPreview()
     {
         co_await wil::resume_foreground(this->DispatcherQueue());
-        contentFrame().Navigate(xaml_typename <VirtualPrinterAppSdk::WorkflowWatermarkSample>(), *this);
+        contentFrame().Navigate(xaml_typename <PSAAppSdk::WorkflowWatermarkSample>(), *this);
     }
 }

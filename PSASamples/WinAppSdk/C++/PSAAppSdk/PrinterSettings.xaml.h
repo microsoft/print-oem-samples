@@ -2,7 +2,7 @@
 
 #include "PrinterSettings.g.h"
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     struct PrinterSettings : PrinterSettingsT<PrinterSettings>
     {
@@ -34,7 +34,7 @@ namespace winrt::VirtualPrinterAppSdk::implementation
     };
 }
 
-namespace winrt::VirtualPrinterAppSdk::factory_implementation
+namespace winrt::PSAAppSdk::factory_implementation
 {
     struct PrinterSettings : PrinterSettingsT<PrinterSettings, implementation::PrinterSettings>
     {

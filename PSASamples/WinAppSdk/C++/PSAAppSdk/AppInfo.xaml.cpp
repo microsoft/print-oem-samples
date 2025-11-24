@@ -16,7 +16,7 @@ using namespace Windows::ApplicationModel;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace winrt::VirtualPrinterAppSdk::implementation
+namespace winrt::PSAAppSdk::implementation
 {
     AppInfo::AppInfo()
     {
