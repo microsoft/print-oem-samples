@@ -1,4 +1,4 @@
-# C++ Print Support App (Windows App SDK)
+ # C++ Print Support App (Windows App SDK)
 
 - [C++ Print Support App (Windows App SDK)](#c-print-support-app-windows-app-sdk)
   - [Overview](#overview)
@@ -11,7 +11,7 @@
 
 This sample demonstrates a Print Support App (PSA) implementation using C++/WinRT and the Windows App SDK (WinUI 3). The solution includes:
 
-- **VirtualPrinterAppSdk**: The main WinUI 3 application that provides printer settings UI, job activation handling, watermark preview, and workflow management.
+- **PSAAppSdk**: The main WinUI 3 application that provides printer settings UI, job activation handling, watermark preview, and workflow management.
 - **BackgroundTasks**: Windows Runtime component containing background tasks for print workflow processing, print support extension, and virtual printer operations.
 - **XpsUtil**: Utility library for XPS document manipulation, including watermarking and page processing.
 
@@ -21,7 +21,7 @@ The app showcases modern print support capabilities including custom printer set
 
 ```
 C++/
-├── VirtualPrinterAppSdk/               # Main WinUI 3 application
+├── PSAAppSdk/               # Main WinUI 3 application
 │   ├── App.xaml.*                      # Application entry point
 │   ├── MainWindow.xaml.*               # Main application window
 │   ├── UserLaunchMainPage.xaml.*       # User-launched settings UI
@@ -84,13 +84,28 @@ Initial Windows App SDK (WinUI 3) C++ implementation including:
   - IPP attribute manipulation
   - Preview rendering with real-time updates
 - Build the project at least once to generate implementation templates under the "Generated Files" folder.
-- The VirtualPrinterAppSdk project includes NuGet packages for Windows App SDK and Windows Implementation Library (WIL).
+- The PSAAppSdk project includes NuGet packages for Windows App SDK and Windows Implementation Library (WIL).
 
 **Building the Solution:**
-1. Open `VirtualPrinterAppSdk.sln` in Visual Studio 2022 or later
+1. Open `PSAAppSdk.sln` (`print-oem-samples\PSASamples\WinAppSdk\C++\PSAAppSdk\PSAAppSdk.sln`) in Visual Studio 2022 or later
 2. Restore NuGet packages
-3. Build the solution (this generates C++/WinRT headers from IDL files)
-4. Deploy and run the application
+  - In the Solution Explorer, right click on the solution header at the top
+  - Select "Restore NuGet packages"
+3. Clean, then build the solution (this generates C++/WinRT headers from IDL files)
+  - In the Solution Explorer, right click on the solution header at the top
+  - Select "Clean Solution"
+  - Wait for the Output panel to show the cleanup was completed successfully
+  - Right click the solution header again and select "Build Solution"
+  - Wait for the Output panel to show the build is completed
+4. Also make sure that PSAAppSdk is selected as the startup project
+  - In the Solution Explorer, right click on the PSAAppSdk project header
+  - Select "Set as Starup Project"
+5. Deploy and run the application
+  - Make sure the settings are configured as "Debug" and "x64" at the top of the Visual Studio menu
+  - Click the green triangle button to run the application on your local machine
+6. PSA Popup Appears
+  - A popup titled "WinUI" should appear, displaying the package family name of the printer
+7. Close the popup window and stop the application by clicking the red square in visual studio
 
 **Manifest Requirements:**
 - The `Package.appxmanifest` must declare the following extensions:

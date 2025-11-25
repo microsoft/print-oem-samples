@@ -380,14 +380,14 @@ code {
 <h2 id="overview">Overview</h2>
 <p>This sample demonstrates a Print Support App (PSA) implementation using C++/WinRT and the Windows App SDK (WinUI 3). The solution includes:</p>
 <ul>
-<li><strong>VirtualPrinterAppSdk</strong>: The main WinUI 3 application that provides printer settings UI, job activation handling, watermark preview, and workflow management.</li>
+<li><strong>PSAAppSdk</strong>: The main WinUI 3 application that provides printer settings UI, job activation handling, watermark preview, and workflow management.</li>
 <li><strong>BackgroundTasks</strong>: Windows Runtime component containing background tasks for print workflow processing, print support extension, and virtual printer operations.</li>
 <li><strong>XpsUtil</strong>: Utility library for XPS document manipulation, including watermarking and page processing.</li>
 </ul>
 <p>The app showcases modern print support capabilities including custom printer settings, XPS document manipulation, watermark application, and IPP attribute handling using the Windows App SDK framework.</p>
 <h2 id="project-structure">Project Structure</h2>
 <pre><code>C++/
-├── VirtualPrinterAppSdk/               # Main WinUI 3 application
+├── PSAAppSdk/               # Main WinUI 3 application
 │   ├── App.xaml.*                      # Application entry point
 │   ├── MainWindow.xaml.*               # Main application window
 │   ├── UserLaunchMainPage.xaml.*       # User-launched settings UI
@@ -448,11 +448,11 @@ code {
 </ul>
 </li>
 <li>Build the project at least once to generate implementation templates under the &quot;Generated Files&quot; folder.</li>
-<li>The VirtualPrinterAppSdk project includes NuGet packages for Windows App SDK and Windows Implementation Library (WIL).</li>
+<li>The PSAAppSdk project includes NuGet packages for Windows App SDK and Windows Implementation Library (WIL).</li>
 </ul>
 <p><strong>Building the Solution:</strong></p>
 <ol>
-<li>Open <code>VirtualPrinterAppSdk.sln</code> in Visual Studio 2022 or later</li>
+<li>Open <code>PSAAppSdk.sln</code> in Visual Studio 2022 or later</li>
 <li>Restore NuGet packages</li>
 <li>Build the solution (this generates C++/WinRT headers from IDL files)</li>
 <li>Deploy and run the application</li>

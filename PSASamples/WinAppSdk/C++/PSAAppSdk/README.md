@@ -1,5 +1,5 @@
 ========================================================================
-    VirtualPrinterAppSdk Project Overview
+    PSAAppSdk Project Overview
 ========================================================================
 
 This project demonstrates how to get started writing WinUI3 apps directly
