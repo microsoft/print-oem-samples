@@ -21,7 +21,7 @@ The app showcases modern print support capabilities including custom printer set
 
 ```
 C++/
-├── PSAAppSdk/               # Main WinUI 3 application
+├── PSAAppSdk/                          # Main WinUI 3 application
 │   ├── App.xaml.*                      # Application entry point
 │   ├── MainWindow.xaml.*               # Main application window
 │   ├── UserLaunchMainPage.xaml.*       # User-launched settings UI
@@ -73,7 +73,7 @@ Initial Windows App SDK (WinUI 3) C++ implementation including:
 
 <details>
 
-- This sample requires the Windows App SDK and is designed for Windows 10, version 2004 (build 19041) and later.
+- This sample requires the Windows App SDK and is designed for Windows 11 24H2 (build 26010) and later.
 - The solution uses C++/WinRT projections for Windows Runtime APIs.
 - IDL files define Windows Runtime classes, and the XAML compiler generates implementation headers.
 - Background tasks run out-of-process to support multi-instance scenarios.
@@ -89,23 +89,23 @@ Initial Windows App SDK (WinUI 3) C++ implementation including:
 **Building the Solution:**
 1. Open `PSAAppSdk.sln` (`print-oem-samples\PSASamples\WinAppSdk\C++\PSAAppSdk\PSAAppSdk.sln`) in Visual Studio 2022 or later
 2. Restore NuGet packages
-  - In the Solution Explorer, right click on the solution header at the top
-  - Select "Restore NuGet packages"
+    - In the Solution Explorer, right click on the solution header at the top
+    - Select "Restore NuGet packages"
 3. Clean, then build the solution (this generates C++/WinRT headers from IDL files)
-  - In the Solution Explorer, right click on the solution header at the top
-  - Select "Clean Solution"
-  - Wait for the Output panel to show the cleanup was completed successfully
-  - Right click the solution header again and select "Build Solution"
-  - Wait for the Output panel to show the build is completed
+    - In the Solution Explorer, right click on the solution header at the top
+    - Select "Clean Solution"
+    - Wait for the Output panel to show the cleanup was completed successfully
+    - Right click the solution header again and select "Build Solution"
+    - Wait for the Output panel to show the build is completed
 4. Also make sure that PSAAppSdk is selected as the startup project
-  - In the Solution Explorer, right click on the PSAAppSdk project header
-  - Select "Set as Starup Project"
+    - In the Solution Explorer, right click on the PSAAppSdk project header
+    - Select "Set as Starup Project"
 5. Deploy and run the application
-  - Make sure the settings are configured as "Debug" and "x64" at the top of the Visual Studio menu
-  - Click the green triangle button to run the application on your local machine
+    - Make sure the settings are configured as "Debug" and "x64" at the top of the Visual Studio menu
+    - Click the green triangle button to run the application on your local machine
 6. PSA Popup Appears
-  - A popup titled "WinUI" should appear, displaying the package family name of the printer
-7. Close the popup window and stop the application by clicking the red square in visual studio
+    - A popup titled "WinUI" should appear, displaying the package family name of the printer
+7. Close the popup window and stop the application by clicking the red square in Visual Studio
 
 **Manifest Requirements:**
 - The `Package.appxmanifest` must declare the following extensions:

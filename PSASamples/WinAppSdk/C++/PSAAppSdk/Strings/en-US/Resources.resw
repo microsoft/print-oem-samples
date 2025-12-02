@@ -21,6 +21,6 @@
     <value>VirtualPostScriptPrinter</value>
   </data>
   <data name="CloudPrintDisplayName">
-    <value>VirtualClouldPrinter</value>
+    <value>VirtualCloudPrinter</value>
   </data>
 </root>

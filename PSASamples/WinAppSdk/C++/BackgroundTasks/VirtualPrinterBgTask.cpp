@@ -77,9 +77,9 @@ namespace winrt::BackgroundTasks::implementation
 			});
 
 		auto uri = m_printDevice.PrinterUri();
-		if (!_wcsicmp(uri.Path().c_str(), L"print-to-clould"))
+		if (!_wcsicmp(uri.Path().c_str(), L"print-to-cloud"))
 		{
-			// This is just a sample for print clould without target file
+			// This is just a sample for print cloud without target file
 			// Put could print code here, samples cannot show cloud communication
 			return;
 		}

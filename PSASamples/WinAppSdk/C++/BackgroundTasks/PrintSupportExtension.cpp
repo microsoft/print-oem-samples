@@ -83,7 +83,7 @@ namespace winrt::BackgroundTasks::implementation
 
 	void PrintSupportExtension::OnSessionCommincationErrorDetected(PrintSupportExtensionSession const& /*sender*/, PrintSupportCommunicationErrorDetectedEventArgs const& args)
 	{
-		// Called only for IPP printer, will not be invoked for virtual pritners
+		// Called only for IPP printer, will not be invoked for virtual printers
 		auto cleanup = wil::scope_exit([&] { args.GetDeferral().Complete(); });
 	}
 }
