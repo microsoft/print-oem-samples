@@ -66,10 +66,13 @@ namespace winrt::PSAAppSdk::implementation
         }
     }
 
-    void JobActivationMainPage::OnSessionJobNotification(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobUISession /*sender*/,
-        winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobNotificationEventArgs /*args*/)
+    void JobActivationMainPage::OnSessionJobNotification(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobUISession sender,
+        winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobNotificationEventArgs args)
     {
-       // TODO need to be implemented
+        m_activationKind = JobActivationKind::JobNotification;
+        m_jobNotificationEventArgs = args;
+        m_jobNotificationDeferral = args.GetDeferral();
+        NavigateToPreview();
     }
 
     void JobActivationMainPage::OnSessionPdlDataAvailable(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowJobUISession /*sender*/,
