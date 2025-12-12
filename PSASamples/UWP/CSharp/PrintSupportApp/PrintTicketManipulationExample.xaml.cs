@@ -24,6 +24,25 @@ namespace PrintSupportApp
         private WorkflowPrintTicket PrintTicket { get; set; }
         private PrintTicketCapabilities Capabilities { get; set; }
 
+        string GetFeatureDisplayName(PrintTicketFeature feature)
+        {
+            string displayName = null;
+            try
+            {
+                displayName = feature.DisplayName;
+                if (string.IsNullOrEmpty(displayName))
+                {
+                    displayName = feature.Name;
+                }
+
+            }
+            catch (System.Exception /*exception*/)
+            {
+                displayName = feature.Name;
+            }
+            return displayName;
+        }
+
         private ComboBox CreatePrintTicketFeatureComboBox(PrintTicketFeature feature, bool useDefaultEventHandler = true)
         {
             if (feature == null)
@@ -34,7 +53,7 @@ namespace PrintSupportApp
             var comboBox = new ComboBox
             {
                 // Header is displayed in the UI, ontop of the ComboBox.
-                Header = feature.DisplayName
+                Header = GetFeatureDisplayName(feature)
             };
             // Construct a new List since IReadOnlyList does not support the 'IndexOf' method.
             var options = new ObservableCollection<PrintTicketOption>(feature.Options);

@@ -21,10 +21,10 @@
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxPackageDir>A:\psa\ab\August9th\</AppxPackageDir>
+    <AppxPackageDir>D:\PSASample\</AppxPackageDir>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -149,6 +149,9 @@
     <Compile Include="UserLaunchMainPage.xaml.cs">
       <DependentUpon>UserLaunchMainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VirtualPrintersPage.xaml.cs">
+      <DependentUpon>VirtualPrintersPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WatermarkManipulationExample.xaml.cs">
       <DependentUpon>WatermarkManipulationExample.xaml</DependentUpon>
     </Compile>
@@ -173,6 +176,7 @@
     <Content Include="Assets\SplashScreen.scale-150.png" />
     <Content Include="Assets\SplashScreen.scale-400.png" />
     <Content Include="Config\PrinterPdc.xml" />
+	<Content Include="Config\PrinterPdr.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -214,6 +218,10 @@
     <Page Include="UserLaunchMainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VirtualPrintersPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="WatermarkManipulationExample.xaml">
       <SubType>Designer</SubType>

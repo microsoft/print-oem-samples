@@ -102,7 +102,7 @@ namespace Tasks
                 var pdr = args.GetCurrentPrintDeviceResources();
 
                 // PDR is not always guarenteed & this function should not fail if PDR is an empty Xml Document
-                if(!string.IsNullOrEmpty(pdrLocale) && pdr.ChildNodes.Count > 0)
+                if (!string.IsNullOrEmpty(pdrLocale) && pdr.ChildNodes.Count > 0)
                 {
                     Windows.ApplicationModel.Resources.Core.ResourceContext defaultContextForCurrentView = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForViewIndependentUse();
                     //Instead of getting language based off of user's/system's preferences, this changes preference to PDR's langauge.
@@ -111,7 +111,7 @@ namespace Tasks
                     Windows.ApplicationModel.Resources.Core.ResourceMap resourceMap = Windows.ApplicationModel.Resources.Core.ResourceManager.Current.MainResourceMap.GetSubtree("ContosoMediaTypes");
                     foreach (var mediaTypeName in resourceMap.Keys)
                     {
-                        if(!CustomTypeExistsInPDR(ref pdr, PdrContosoNamespaceWithAttribute(mediaTypeName)))
+                        if (!CustomTypeExistsInPDR(ref pdr, PdrContosoNamespaceWithAttribute(mediaTypeName)))
                         {
                             var localizedName = resourceMap.GetValue(mediaTypeName, defaultContextForCurrentView).ValueAsString;
                             AddCustomPdrString(ref pdr, PdrContosoNamespaceWithAttribute(mediaTypeName), localizedName);
@@ -157,15 +157,18 @@ namespace Tasks
                 searchString,
                 "xmlns:psk=\"http://schemas.microsoft.com/windows/2003/08/printing/printschemakeywords\" xmlns:psf2=\"http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2\"");
 
-            // Get the owner document so that we can add new elements to the currently selected XML section.
-            var document = defaultPageMediaTypeNode.OwnerDocument;
-            // Create the new XML element for our custom media type.
-            var newNode = document.CreateElementNS(namespaceUri, mediaType);
-            newNode.SetAttributeNS("http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2", "psf2:psftype", "Option");
-            newNode.SetAttributeNS("http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2", "psf2:default", "false");
+            if (defaultPageMediaTypeNode != null)
+            {
+                // Get the owner document so that we can add new elements to the currently selected XML section.
+                var document = defaultPageMediaTypeNode.OwnerDocument;
+                // Create the new XML element for our custom media type.
+                var newNode = document.CreateElementNS(namespaceUri, mediaType);
+                newNode.SetAttributeNS("http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2", "psf2:psftype", "Option");
+                newNode.SetAttributeNS("http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2", "psf2:default", "false");
 
-            var parent = defaultPageMediaTypeNode.ParentNode;
-            parent.AppendChild(newNode);
+                var parent = defaultPageMediaTypeNode.ParentNode;
+                parent.AppendChild(newNode);
+            }
         }
 
         private void AddCustomMediaSize(ref XmlDocument pdc, string type, string namespaceUri, string mediaType, string height, string width, string overall)
@@ -184,7 +187,10 @@ namespace Tasks
                 searchString,
                 "xmlns:psk=\"http://schemas.microsoft.com/windows/2003/08/printing/printschemakeywords\" xmlns:psf2=\"http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2\"");
 
-            
+            if (defaultPageMediaTypeNode == null)
+            {
+                return;
+            }
 
             // Get the owner document so that we can add new elements to the currently selected XML section.
             var document = defaultPageMediaTypeNode.OwnerDocument;
@@ -231,6 +237,11 @@ namespace Tasks
             var defaultPageMediaTypeNode = pdc.SelectSingleNodeNS(
                 searchString,
                 "xmlns:psk=\"http://schemas.microsoft.com/windows/2003/08/printing/printschemakeywords\" xmlns:psf2=\"http://schemas.microsoft.com/windows/2013/12/printing/printschemaframework2\"");
+
+            if (defaultPageMediaTypeNode == null)
+            {
+                return;
+            }
 
             // Get the owner document so that we can add new elements to the currently selected XML section.
             var document = defaultPageMediaTypeNode.OwnerDocument;

@@ -45,22 +45,37 @@ namespace Tasks
             {
                 PrintWorkflowPdlSourceContent soruceContent = args.SourceContent;
                 StorageFile targetFile = args.GetTargetFileAsync().AsTask().Result;
-                IRandomAccessStream outputStream = targetFile.OpenAsync(FileAccessMode.ReadWrite).AsTask().Result;
-                var inputStream = soruceContent.GetInputStream();
-                using (var outStream = outputStream.GetOutputStreamAt(0))
+                if (targetFile != null)
                 {
-                    if (printDevice.PrinterUri.AbsolutePath == "print-to-pdf")
+                    IRandomAccessStream outputStream = targetFile.OpenAsync(FileAccessMode.ReadWrite).AsTask().Result;
+                    var inputStream = soruceContent.GetInputStream();
+                    using (var outStream = outputStream.GetOutputStreamAt(0))
                     {
-                        // Get XPS to PDF PDL converter.
-                        PrintWorkflowPdlConverter converter = args.GetPdlConverter(PrintWorkflowPdlConversionType.XpsToPdf);
-                        // Convert XPS to PDF and write contents to outputStream.
-                        var printTicket = args.GetJobPrintTicket();
 
-                        converter.ConvertPdlAsync(printTicket, inputStream, outStream).AsTask().Wait();
-                    }
-                    else if (printDevice.PrinterUri.AbsolutePath == "print-to-ps")
-                    {
-                        RandomAccessStream.CopyAndCloseAsync(inputStream, outStream).AsTask().Wait();
+                        if (targetFile.FileType == ".pdf")
+                        {
+                            if (soruceContent.ContentType.ToLower() == "application/oxps")
+                            {
+                                // Get XPS to PDF PDL converter.
+                                PrintWorkflowPdlConverter converter = args.GetPdlConverter(PrintWorkflowPdlConversionType.XpsToPdf);
+                                // Convert XPS to PDF and write contents to outputStream.
+                                var printTicket = args.GetJobPrintTicket();
+
+                                converter.ConvertPdlAsync(printTicket, inputStream, outStream).AsTask().Wait();
+                            }
+                            else if (soruceContent.ContentType.ToLower() == "application/pdf")
+                            {
+                                RandomAccessStream.CopyAndCloseAsync(inputStream, outStream).AsTask().Wait();
+                            }
+                            else
+                            {
+                                throw new Exception();
+                            }
+                        }
+                        else
+                        {
+                            RandomAccessStream.CopyAndCloseAsync(inputStream, outStream).AsTask().Wait();
+                        }
                     }
                 }
 
