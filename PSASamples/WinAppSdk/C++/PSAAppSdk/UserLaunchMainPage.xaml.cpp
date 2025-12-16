@@ -21,19 +21,6 @@ namespace winrt::PSAAppSdk::implementation
         InitializeComponent();
     }
 
-    void UserLaunchMainPage::NavViewItemInvoked(Microsoft::UI::Xaml::Controls::NavigationView /*sender*/, Microsoft::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs args)
-    {
-        auto tagg = args.InvokedItemContainer().Tag().try_as<winrt::hstring>();
-        if (tagg == L"GetIppPrinterUrl")
-        {
-            contentFrame().Navigate(xaml_typename<PSAAppSdk::AppInfo>(), args);
-        }
-        else
-        {
-            contentFrame().Navigate(xaml_typename<PSAAppSdk::AppInfo>(), args);
-        }
-    }
-
     void UserLaunchMainPage::NavViewLoaded(IInspectable const& /*sender*/, RoutedEventArgs e)
     {
         // NavView doesn't load any page by default, so load the first page.

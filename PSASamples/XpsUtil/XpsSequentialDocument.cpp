@@ -113,45 +113,47 @@ namespace winrt::XpsUtil::implementation
         if (m_outputStream != nullptr)
         {
             com_ptr<IOpcPartUri> documentSequencePartName;
-            check_hresult(m_xpsFactory->CreatePartUri(documentSequenceUri, documentSequencePartName.put()));
+            THROW_IF_FAILED(m_xpsFactory->CreatePartUri(documentSequenceUri, documentSequencePartName.put()));
 
             com_ptr<IOpcPartUri> spDiscardControlPartName;
-            check_hresult(m_xpsFactory->CreatePartUri(L"/DiscardControl.xml", spDiscardControlPartName.put()));
+            THROW_IF_FAILED(m_xpsFactory->CreatePartUri(L"/DiscardControl.xml", spDiscardControlPartName.put()));
 
-            check_hresult(m_xpsFactory->CreatePackageWriterOnStream1(m_outputStream.as<ISequentialStream>().get(), true, XPS_INTERLEAVING_ON, documentSequencePartName.get(),
+            THROW_IF_FAILED(m_xpsFactory->CreatePackageWriterOnStream1(m_outputStream.as<ISequentialStream>().get(), true, XPS_INTERLEAVING_ON, documentSequencePartName.get(),
                 NULL, NULL, NULL, spDiscardControlPartName.get(), XPS_DOCUMENT_TYPE_OPENXPS, m_xpsOMPackageWriter.put()));
         }
 
         return S_OK;
-    } catch (...) { return winrt::to_hresult(); }
+    }
+    CATCH_RETURN()
 
     HRESULT __stdcall XpsSequentialDocument::AddDocumentData([[maybe_unused]] UINT32 documentId, [[maybe_unused]] IStream* documentPrintTicket, PCWSTR documentUri) noexcept try
     {
         if (m_xpsOMPackageWriter != nullptr)
         {
             com_ptr<IOpcPartUri> documentPartUri;
-            check_hresult(m_xpsFactory->CreatePartUri(documentUri, documentPartUri.put()));
+            THROW_IF_FAILED(m_xpsFactory->CreatePartUri(documentUri, documentPartUri.put()));
 
             // Start writing new document (as soon as received) 
-            check_hresult(m_xpsOMPackageWriter->StartNewDocument(documentPartUri.get(), nullptr, nullptr, nullptr, nullptr));
+            THROW_IF_FAILED(m_xpsOMPackageWriter->StartNewDocument(documentPartUri.get(), nullptr, nullptr, nullptr, nullptr));
         }
 
         return S_OK;
-    } catch (...) { return winrt::to_hresult(); }
+    }
+    CATCH_RETURN()
 
     HRESULT __stdcall XpsSequentialDocument::AddPage([[maybe_unused]] UINT32 documentId, UINT32 pageId, IXpsOMPageReference* pageReference, PCWSTR pageUri) noexcept try
     {
         // Get the page and its dimensions
         com_ptr<IXpsOMPage> xpsOMPage;
-        check_hresult(pageReference->GetPage(xpsOMPage.put()));
+        THROW_IF_FAILED(pageReference->GetPage(xpsOMPage.put()));
 
         if (m_xpsOMPackageWriter != nullptr)
         {
             XPS_SIZE pageDimensions { };
-            check_hresult(xpsOMPage->GetPageDimensions(&pageDimensions));
+            THROW_IF_FAILED(xpsOMPage->GetPageDimensions(&pageDimensions));
 
             com_ptr<IOpcPartUri> opcPagePartUri;
-            check_hresult(m_xpsFactory->CreatePartUri(pageUri, opcPagePartUri.put()));
+            THROW_IF_FAILED(m_xpsFactory->CreatePartUri(pageUri, opcPagePartUri.put()));
 
             if (m_watermarker)
             {
@@ -159,7 +161,7 @@ namespace winrt::XpsUtil::implementation
             }
 
             // Finished modifying, so add page to package
-            check_hresult(m_xpsOMPackageWriter->AddPage(xpsOMPage.get(), &pageDimensions, nullptr, nullptr, nullptr, nullptr));
+            THROW_IF_FAILED(m_xpsOMPackageWriter->AddPage(xpsOMPage.get(), &pageDimensions, nullptr, nullptr, nullptr, nullptr));
         }
 
         m_pages.push_back(xpsOMPage);
@@ -172,14 +174,15 @@ namespace winrt::XpsUtil::implementation
         catch (...) {}
 
         return S_OK;
-    } catch (...) { return winrt::to_hresult(); }
+    }
+    CATCH_RETURN()
 
     HRESULT __stdcall XpsSequentialDocument::Close() noexcept try
     {
 
         if (m_xpsOMPackageWriter != nullptr)
         {
-            check_hresult(m_xpsOMPackageWriter->Close());
+            THROW_IF_FAILED(m_xpsOMPackageWriter->Close());
         }
 
         if (m_outputStream != nullptr) {
@@ -194,7 +197,8 @@ namespace winrt::XpsUtil::implementation
         catch (...) { }
 
         return S_OK;
-    } catch (...) { return winrt::to_hresult(); }
+    }
+    CATCH_RETURN()
 
     HRESULT __stdcall XpsSequentialDocument::Failed(HRESULT xpsError) noexcept try
     {
@@ -211,7 +215,8 @@ namespace winrt::XpsUtil::implementation
 
         return S_OK;
     }
-    catch (...) { return winrt::to_hresult(); }
+    CATCH_RETURN()
+
     // End of IPrintWorkflowXpsReceiver interface methods
 
     /// <summary>

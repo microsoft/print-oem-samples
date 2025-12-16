@@ -97,11 +97,6 @@ namespace winrt::PSAAppSdk::implementation
         {
             winrt::throw_last_error();
         }
-        // return true for windows rect for which width and height is zero
-        if (((rect.right - rect.left) == 0) || ((rect.bottom - rect.top) == 0) || (rect.bottom == 0 && rect.top == 0 && rect.right == 0 && rect.left == 0))
-        {
-            return true;
-        }
 
         return false;
     }

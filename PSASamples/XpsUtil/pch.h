@@ -5,3 +5,4 @@
 
 #include <xpsobjectmodel_1.h>
 #include <windows.graphics.printing.workflow.native.h>
+#include <wil/result.h>

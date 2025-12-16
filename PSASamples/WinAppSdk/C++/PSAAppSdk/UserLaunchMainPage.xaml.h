@@ -12,8 +12,6 @@ namespace winrt::PSAAppSdk::implementation
         UserLaunchMainPage();
         void OnNavigatedTo(Microsoft::UI::Xaml::Navigation::NavigationEventArgs e);
         void NavViewLoaded(winrt::Windows::Foundation::IInspectable const& sender, Microsoft::UI::Xaml::RoutedEventArgs e);
-        void NavViewItemInvoked(Microsoft::UI::Xaml::Controls::NavigationView sender, Microsoft::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs args);
-
     };
 }
 

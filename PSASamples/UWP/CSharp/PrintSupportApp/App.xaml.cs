@@ -57,6 +57,12 @@ namespace PrintSupportApp
             {
                 pageType = typeof(JobActivatedMainPage);
             }
+            else
+            {
+                // Unknown activation kind - exit the application
+                Application.Current.Exit();
+                return;
+            }
 
             rootFrame.Navigate(pageType, args);
             Window.Current.Content = rootFrame;

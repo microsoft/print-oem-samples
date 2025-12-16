@@ -42,10 +42,6 @@ namespace winrt::PSAAppSdk::implementation
         auto pdcString =  m_printCapabilities.XmlNode().GetXml();
         auto ptString = m_printTicket.XmlNode().GetXml();
 
-        OutputDebugString(L"Setting output");
-        OutputDebugString(pdcString.c_str());
-        OutputDebugString(ptString.c_str());
-
         // A list of Controls that will be rendered in the UI.
         auto printTicketControls = winrt::single_threaded_observable_vector<Control>();
 

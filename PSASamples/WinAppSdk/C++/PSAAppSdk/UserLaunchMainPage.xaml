@@ -14,7 +14,6 @@
         x:Name="NavigationViewControl"
         IsBackButtonVisible="Collapsed"
         IsSettingsVisible="False"
-        ItemInvoked="NavViewItemInvoked"
         Loaded="NavViewLoaded"
         PaneDisplayMode="Top">
         <muxc:NavigationView.MenuItems>

@@ -85,15 +85,15 @@ namespace winrt::XpsUtil::implementation
     {
         // Create the font URI, the URI is the path in the XPS package.
         com_ptr<IOpcPartUri> fontUri;
-        check_hresult(m_xpsFactory->CreatePartUri(L"/Resources/Fonts/WatermarkFont.odttf", fontUri.put()));
+        THROW_IF_FAILED(m_xpsFactory->CreatePartUri(L"/Resources/Fonts/WatermarkFont.odttf", fontUri.put()));
 
         // Load an existing font file to an IStream.
         com_ptr<IStream> fontStream;
-        check_hresult(m_xpsFactory->CreateReadOnlyStreamOnFile(fontFilepath.c_str(), fontStream.put()));
+        THROW_IF_FAILED(m_xpsFactory->CreateReadOnlyStreamOnFile(fontFilepath.c_str(), fontStream.put()));
 
         // Create the font resource.
         com_ptr<IXpsOMFontResource> fontResource;
-        check_hresult(m_xpsFactory->CreateFontResource(fontStream.get(),
+        THROW_IF_FAILED(m_xpsFactory->CreateFontResource(fontStream.get(),
             XPS_FONT_EMBEDDING_NORMAL,
             fontUri.get(),
             FALSE, // isObfSourceStream
@@ -105,22 +105,22 @@ namespace winrt::XpsUtil::implementation
     {
         // Create a new Glyphs object and set its properties.
         com_ptr<IXpsOMGlyphs> xpsGlyphs;
-        check_hresult(m_xpsFactory->CreateGlyphs(fontResource.get(), xpsGlyphs.put()));
-        check_hresult(xpsGlyphs->SetOrigin(origin));
-        check_hresult(xpsGlyphs->SetFontRenderingEmSize(fontSize));
-        check_hresult(xpsGlyphs->SetFillBrushLocal(colorBrush.get()));
+        THROW_IF_FAILED(m_xpsFactory->CreateGlyphs(fontResource.get(), xpsGlyphs.put()));
+        THROW_IF_FAILED(xpsGlyphs->SetOrigin(origin));
+        THROW_IF_FAILED(xpsGlyphs->SetFontRenderingEmSize(fontSize));
+        THROW_IF_FAILED(xpsGlyphs->SetFillBrushLocal(colorBrush.get()));
 
         // Some properties are inter-dependent so they
         // must be changed by using a GlyphsEditor.
         com_ptr<IXpsOMGlyphsEditor> glyphsEditor;
-        check_hresult(xpsGlyphs->GetGlyphsEditor(glyphsEditor.put()));
-        check_hresult(glyphsEditor->SetUnicodeString(text.c_str()));
-        check_hresult(glyphsEditor->ApplyEdits());
+        THROW_IF_FAILED(xpsGlyphs->GetGlyphsEditor(glyphsEditor.put()));
+        THROW_IF_FAILED(glyphsEditor->SetUnicodeString(text.c_str()));
+        THROW_IF_FAILED(glyphsEditor->ApplyEdits());
 
         // Add the new Glyphs object to the page
         com_ptr<IXpsOMVisualCollection> pageVisuals;
-        check_hresult(xpsPage->GetVisuals(pageVisuals.put()));
-        check_hresult(pageVisuals->Append(xpsGlyphs.get()));
+        THROW_IF_FAILED(xpsPage->GetVisuals(pageVisuals.put()));
+        THROW_IF_FAILED(pageVisuals->Append(xpsGlyphs.get()));
     }
 
     std::wstring GetObsolutePath(std::wstring const& relativePath)
@@ -147,11 +147,11 @@ namespace winrt::XpsUtil::implementation
         xpsColorBodyText.value.sRGB.alpha = 0x40;
 
         com_ptr<IXpsOMSolidColorBrush> xpsTextColorBrush;
-        check_hresult(m_xpsFactory->CreateSolidColorBrush(&xpsColorBodyText, nullptr, xpsTextColorBrush.put()));
+        THROW_IF_FAILED(m_xpsFactory->CreateSolidColorBrush(&xpsColorBodyText, nullptr, xpsTextColorBrush.put()));
 
         // Create the XPS_POINT for where the text begins.
         XPS_SIZE pageDimensions = { 0 };
-        check_hresult(xpsPage->GetPageDimensions(&pageDimensions));
+        THROW_IF_FAILED(xpsPage->GetPageDimensions(&pageDimensions));
         XPS_POINT textOrigin = { pageDimensions.width * static_cast<float>(xRelativeOffset), pageDimensions.height * static_cast<float>(yRelativeOffset) };
 
         std::wstring fontPath = L"Fonts\\arial.ttf";
@@ -162,7 +162,7 @@ namespace winrt::XpsUtil::implementation
 
         THROW_LAST_ERROR_IF(directoryResult == 0);
 
-        check_hresult(PathCchCombine(fullPath, ARRAYSIZE(fullPath), pathString.data(), fontPath.data()));
+        THROW_IF_FAILED(PathCchCombine(fullPath, ARRAYSIZE(fullPath), pathString.data(), fontPath.data()));
 
         auto fontResource = CreateFontResource(fullPath);
 
@@ -172,7 +172,7 @@ namespace winrt::XpsUtil::implementation
     void XpsPageWatermarker::AddWatermarkImage(com_ptr<IXpsOMPage> const& xpsPage)
     {
         XPS_SIZE pageDimensions{ };
-        check_hresult(xpsPage->GetPageDimensions(&pageDimensions));
+        THROW_IF_FAILED(xpsPage->GetPageDimensions(&pageDimensions));
         AddImageToPage(xpsPage, pageDimensions);
     }
 
@@ -193,8 +193,8 @@ namespace winrt::XpsUtil::implementation
             XPS_RECT rectForImage = { 0, 0, pageDimensions.width / 10, pageDimensions.height / 10 };
 
             com_ptr<IXpsOMImageResource> imageResource;
-            check_hresult(CreateImageResource(GetObsolutePath(imageFileName), imagePartName, imageResource.put()));
-            check_hresult(AddImageToVisualCollection(
+            THROW_IF_FAILED(CreateImageResource(GetObsolutePath(imageFileName), imagePartName, imageResource.put()));
+            THROW_IF_FAILED(AddImageToVisualCollection(
                 xpsPage,
                 imageResource.get(),
                 &imageDim,
@@ -235,19 +235,16 @@ namespace winrt::XpsUtil::implementation
 
     HRESULT XpsPageWatermarker::CreateImageResource(_In_ const std::wstring imageFileName, _In_ const std::wstring imagePartName, _Out_ IXpsOMImageResource** imageResource)
     {
-        if (imageFileName.empty() || imagePartName.empty())
-        {
-            return E_INVALIDARG;
-        }
+        RETURN_HR_IF(E_INVALIDARG, imageFileName.empty() || imagePartName.empty());
 
         com_ptr<IStream> imageStream;
         com_ptr<IOpcPartUri> imagePartUri;
 
-        m_xpsFactory->CreateReadOnlyStreamOnFile(imageFileName.c_str(), imageStream.put());
-        m_xpsFactory->CreatePartUri(imagePartName.c_str(), imagePartUri.put());
+        RETURN_IF_FAILED(m_xpsFactory->CreateReadOnlyStreamOnFile(imageFileName.c_str(), imageStream.put()));
+        RETURN_IF_FAILED(m_xpsFactory->CreatePartUri(imagePartName.c_str(), imagePartUri.put()));
 
         XPS_IMAGE_TYPE imageType = XPS_IMAGE_TYPE_JPEG; // set to type of image being read in
-        check_hresult(m_xpsFactory->CreateImageResource(
+        RETURN_IF_FAILED(m_xpsFactory->CreateImageResource(
             imageStream.get(),
             imageType,
             imagePartUri.get(),
@@ -260,10 +257,7 @@ namespace winrt::XpsUtil::implementation
         com_ptr<IXpsOMPage> const& xpsPage, IXpsOMImageResource* imageResource, XPS_SIZE* imageDim, float dotsPerInchX,
         float dotsPerInchY, XPS_RECT rectForImage, std::wstring shortDescription)
     {
-        if (imageResource == nullptr)
-        {
-            return E_INVALIDARG;
-        }
+        RETURN_HR_IF_NULL(E_INVALIDARG, imageResource);
 
         XPS_RECT viewPort = { 0.0, 0.0, 0.0, 0.0 };
         XPS_RECT viewBox = { 0.0, 0.0, 0.0, 0.0 };
@@ -286,32 +280,29 @@ namespace winrt::XpsUtil::implementation
         viewPort.height = rectForImage.height;
 
         // Create the image brush.
-        check_hresult(m_xpsFactory->CreateImageBrush(imageResource, &viewBox, &viewPort, imageBrush.put()));
+        RETURN_IF_FAILED(m_xpsFactory->CreateImageBrush(imageResource, &viewBox, &viewPort, imageBrush.put()));
 
         // Create the path that describes the outline of the image on the page.
-        check_hresult(CreateRectanglePath(rectForImage, imageRectPath.put()));
+        RETURN_IF_FAILED(CreateRectanglePath(rectForImage, imageRectPath.put()));
 
         // Set the accessibility description for the path object as required.
-        check_hresult(imageRectPath->SetAccessibilityShortDescription(shortDescription.c_str()));
+        RETURN_IF_FAILED(imageRectPath->SetAccessibilityShortDescription(shortDescription.c_str()));
 
         // Set the image brush to be the fill brush for this path.
-        check_hresult(imageRectPath->SetFillBrushLocal(imageBrush.get()));
+        RETURN_IF_FAILED(imageRectPath->SetFillBrushLocal(imageBrush.get()));
 
         // Get the list of visuals for this page...
-        check_hresult(xpsPage->GetVisuals(pageVisuals.put()));
+        RETURN_IF_FAILED(xpsPage->GetVisuals(pageVisuals.put()));
 
         // ...and add the completed path to the list.
-        check_hresult(pageVisuals->Append(imageRectPath.get()));
+        RETURN_IF_FAILED(pageVisuals->Append(imageRectPath.get()));
 
         return S_OK;
     }
 
     HRESULT XpsPageWatermarker::CreateRectanglePath(_In_ const XPS_RECT& rect, _Out_ IXpsOMPath** rectPath)
     {
-        if (rectPath == nullptr)
-        {
-            return E_INVALIDARG;
-        }
+        RETURN_HR_IF_NULL(E_INVALIDARG, rectPath);
 
         com_ptr<IXpsOMGeometryFigure> rectFigure;
         com_ptr<IXpsOMGeometry> imageRectGeometry;
@@ -329,20 +320,20 @@ namespace winrt::XpsUtil::implementation
         BOOL segmentStrokes[3] = { TRUE, TRUE, TRUE };
 
         // Create a closed geometry figure using the three segments defined above.
-        check_hresult(m_xpsFactory->CreateGeometryFigure(&startPoint, rectFigure.put()));
-        check_hresult(rectFigure->SetIsClosed(TRUE));
-        check_hresult(rectFigure->SetIsFilled(TRUE));
-        check_hresult(rectFigure->SetSegments(3, 6, segmentTypes, segmentData, segmentStrokes));
+        RETURN_IF_FAILED(m_xpsFactory->CreateGeometryFigure(&startPoint, rectFigure.put()));
+        RETURN_IF_FAILED(rectFigure->SetIsClosed(TRUE));
+        RETURN_IF_FAILED(rectFigure->SetIsFilled(TRUE));
+        RETURN_IF_FAILED(rectFigure->SetSegments(3, 6, segmentTypes, segmentData, segmentStrokes));
 
         // Create a geometry that consists of the figure created above.
-        check_hresult(m_xpsFactory->CreateGeometry(imageRectGeometry.put()));
-        check_hresult(imageRectGeometry->GetFigures(geomFigureCollection.put()));
-        check_hresult(geomFigureCollection->Append(rectFigure.get()));
+        RETURN_IF_FAILED(m_xpsFactory->CreateGeometry(imageRectGeometry.put()));
+        RETURN_IF_FAILED(imageRectGeometry->GetFigures(geomFigureCollection.put()));
+        RETURN_IF_FAILED(geomFigureCollection->Append(rectFigure.get()));
 
         // Create the path that consists of the geometry created above
         //  and return the pointer in the parameter passed in to the function.
-        check_hresult(m_xpsFactory->CreatePath(reinterpret_cast<IXpsOMPath**>(rectPath)));
-        check_hresult((*rectPath)->SetGeometryLocal(imageRectGeometry.get()));
+        RETURN_IF_FAILED(m_xpsFactory->CreatePath(reinterpret_cast<IXpsOMPath**>(rectPath)));
+        RETURN_IF_FAILED((*rectPath)->SetGeometryLocal(imageRectGeometry.get()));
 
         // The calling method will release IXpsOMPath when it is done with it.
 
