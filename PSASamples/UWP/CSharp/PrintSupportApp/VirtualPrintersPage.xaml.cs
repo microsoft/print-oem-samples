@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection.Metadata;
 using Windows.ApplicationModel;
-using Windows.Devices.Printers;
 using Windows.Devices.Printers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

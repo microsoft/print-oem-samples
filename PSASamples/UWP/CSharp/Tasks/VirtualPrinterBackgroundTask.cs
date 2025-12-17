@@ -54,7 +54,7 @@ namespace Tasks
 
                     if (shouldLaunchUI)
                     {
-                        // Launch UI to allow user to apply watermarks or other modifications before conversion
+                        // Launch UI to allow user to configure watermarks before conversion
                         PrintWorkflowUILauncher uiLauncher = args.UILauncher;
                         if (uiLauncher != null)
                         {
@@ -74,12 +74,12 @@ namespace Tasks
                         // Get the XPS document data stream from the source content.
                         PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel = new PrintWorkflowObjectModelSourceFileContent(inputStream);
 
-                        XpsPageWatermarker watermarker = GetXpsPageWatermarker();
+                        XpsPageWatermarker watermarker = ConfigureWatermarker();
 
                         // Adds the watermark to the XPS document.
                         var document = new XpsSequentialDocument(xpsContentObjectModel);
                         
-                        // Get the watermarked stream to use for conversion
+                        // Get the watermarked stream to use for conversion or direct output
                         inputStream = document.GetWatermarkedStream(watermarker);
                     }
 
@@ -127,7 +127,7 @@ namespace Tasks
         /// <summary>
         /// Configure the watermarker with settings from LocalStorage (saved by the UI)
         /// </summary>
-        private XpsPageWatermarker GetXpsPageWatermarker()
+        private XpsPageWatermarker ConfigureWatermarker()
         {
             XpsPageWatermarker watermarker = new XpsPageWatermarker();
 
