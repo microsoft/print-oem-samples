@@ -16,6 +16,7 @@ using System.IO;
 using Windows.Storage.Streams;
 using Windows.Storage;
 using Windows.Devices.Input;
+using XpsUtil;
 
 namespace Tasks
 {
@@ -65,7 +66,23 @@ namespace Tasks
                     }
 
                     IRandomAccessStream outputStream = targetFile.OpenAsync(FileAccessMode.ReadWrite).AsTask().Result;
-                    var inputStream = sourceContent.GetInputStream();
+                    IInputStream inputStream = sourceContent.GetInputStream();
+                    
+                    // Apply watermarks if source is XPS
+                    if (sourceContent.ContentType.ToLower() == "application/oxps")
+                    {
+                        // Get the XPS document data stream from the source content.
+                        PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel = new PrintWorkflowObjectModelSourceFileContent(inputStream);
+
+                        XpsPageWatermarker watermarker = ConfigureWatermarker();
+
+                        // Adds the watermark to the XPS document.
+                        var document = new XpsSequentialDocument(xpsContentObjectModel);
+                        
+                        // Get the watermarked stream to use for conversion
+                        inputStream = document.GetWatermarkedStream(watermarker);
+                    }
+
                     using (var outStream = outputStream.GetOutputStreamAt(0))
                     {
 
@@ -105,6 +122,27 @@ namespace Tasks
                 args.CompleteJob(jobStatus);
                 taskDeferral.Complete();
             }
+        }
+
+        /// <summary>
+        /// Configure the watermarker with settings from LocalStorage (saved by the UI)
+        /// </summary>
+        private XpsPageWatermarker ConfigureWatermarker()
+        {
+            XpsPageWatermarker watermarker = new XpsPageWatermarker();
+
+            LocalStorageUtil.GetWatermarkTextPropertiesFromLocalStorage(out string watermarkText, out int fontSize, out double xOffset, out double yOffset);
+            watermarker.SetWatermarkText(watermarkText, fontSize, xOffset, yOffset);
+
+            bool usingImage = LocalStorageUtil.GetImagePropertiesFromLocalStorage(out string imageFile, out double dpiX, out double dpiY, out int imageWidth, out int imageHeight);
+
+            watermarker.SetWatermarkImageEnabled(usingImage && imageFile != null);
+            if (usingImage && imageFile != null)
+            {
+                watermarker.SetWatermarkImage(imageFile, dpiX, dpiY, imageWidth, imageHeight);
+            }
+
+            return watermarker;
         }
     }
 }
