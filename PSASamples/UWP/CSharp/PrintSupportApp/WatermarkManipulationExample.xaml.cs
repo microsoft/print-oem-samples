@@ -77,6 +77,13 @@ namespace PrintSupportApp
                 OnPdlDataAvailable(args);
                 printTicket1 = args.PrinterJob.GetJobPrintTicket();
             }
+            else if (e.Parameter is PrintWorkflowVirtualPrinterUIEventArgs virtualArgs)
+            {
+                OnVirtualPrinterDataAvailable(virtualArgs);
+                // Virtual printer UI events don't expose the print ticket through the same API
+                // The print ticket is handled internally by the virtual printer workflow
+                printTicket1 = null;
+            }
         }
 
         /// <summary>
@@ -114,6 +121,108 @@ namespace PrintSupportApp
                     jobPasswordBox.MaxLength = maxPasswordLength;
                 }
             }
+        }
+
+        /// <summary>
+        /// Called when virtual printer UI is activated. Similar to OnPdlDataAvailable but for virtual printer scenarios.
+        /// Virtual printers handle print tickets and job submission differently than physical printers.
+        /// </summary>
+        /// <param name="args">The virtual printer UI event arguments</param>
+        public void OnVirtualPrinterDataAvailable(PrintWorkflowVirtualPrinterUIEventArgs args)
+        {
+            // Note: Virtual printer UI events don't expose printer/job information directly
+            // Job password fields are typically not applicable for virtual printer scenarios
+            // If needed, they should be configured through other means
+
+            PrintWorkflowConfig = args.Configuration;
+            //By Default preview button and preview section will be visible
+
+            //This is only for XPS preview
+            if (string.Equals(args.SourceContent.ContentType, "application/OXPS", StringComparison.OrdinalIgnoreCase))
+            {
+                PreviewLoadingProgressRing.IsActive = true;
+                PreviewLoadingProgressRing.Visibility = Visibility.Visible;
+                PrintButton.IsEnabled = false;
+
+                PreviewPaginator.TotalPages = null;
+                PreviewPaginator.CurrentPage = null;
+
+                var xpsContentStream = args.SourceContent.GetInputStream();
+                PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel = new PrintWorkflowObjectModelSourceFileContent(xpsContentStream);
+                document = new XpsSequentialDocument(xpsContentObjectModel);
+                bool hasGotFirstPage = false;
+
+                // Note: pageNum is ONE-INDEXED
+                document.PageAdded += async (sender, pageNum) =>
+                {
+                    if (pageNum > TotalPages.GetValueOrDefault(0))
+                    {
+                        TotalPages = pageNum;
+
+                        await PreviewPaginator.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                        {
+                            PreviewPaginator.TotalPages = TotalPages;
+                        });
+                    }
+
+                    if (!hasGotFirstPage)
+                    {
+                        hasGotFirstPage = true;
+
+                        await PreviewPaginator.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                        {
+                            PreviewPaginator.CurrentPage = CurrentPage = 1;
+                            WatermarkPreview.PreviewPage = sender.GetPage(1);
+                            RenderPreview();
+
+                            PrintButton.IsEnabled = true;
+                        });
+                    }
+                };
+
+                document.DocumentClosed += async (sender, e) =>
+                {
+                    await PreviewPaginator.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        PreviewLoadingProgressRing.IsActive = false;
+                        PreviewLoadingProgressRing.Visibility = Visibility.Collapsed;
+
+                        RenderPreview();
+                    });
+                };
+
+                document.XpsGenerationFailed += async (sender, e) =>
+                {
+                    await XpsGenerationErrorTextBlock.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        PreviewLoadingProgressRing.IsActive = false;
+
+                        // Disable all controls except "cancel"
+                        PrintButton.IsEnabled = false;
+                        WatermarkTextBox.IsEnabled = false;
+                        TextSizeBox.IsEnabled = false;
+                        ImageCheckBox.IsEnabled = false;
+                        PreviewPaginator.IsEnabled = false;
+                        PositionWatermarkButton.IsEnabled = false;
+                        PreviewPaginator.CurrentPage = PreviewPaginator.TotalPages = null;
+
+                        XpsGenerationErrorTextBlock.Visibility = Visibility.Visible;
+                    });
+                };
+
+                document.StartXpsOMGeneration();
+            }
+            else
+            {
+                //We make preview button and preview section will be invisible
+                PreviewScrollViewer.Visibility = Visibility.Collapsed;
+            }
+
+            // Note: Virtual printer workflows typically don't expose print ticket parameters 
+            // in the same way as physical printers, so we skip the fax phone number check
+            // If you need to access print ticket data for virtual printers, you may need to
+            // use alternative APIs specific to the virtual printer implementation
+            FaxPhoneNumberTextBox.Visibility = Visibility.Collapsed;
         }
 
         public void OnPdlDataAvailable(PrintWorkflowPdlDataAvailableEventArgs args)

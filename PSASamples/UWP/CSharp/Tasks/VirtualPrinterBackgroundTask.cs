@@ -43,18 +43,35 @@ namespace Tasks
             PrintWorkflowSubmittedStatus jobStatus = PrintWorkflowSubmittedStatus.Failed;
             try
             {
-                PrintWorkflowPdlSourceContent soruceContent = args.SourceContent;
+                PrintWorkflowPdlSourceContent sourceContent = args.SourceContent;
                 StorageFile targetFile = args.GetTargetFileAsync().AsTask().Result;
                 if (targetFile != null)
                 {
+                    // Check if we need to launch UI for XPS to PDF conversion
+                    bool shouldLaunchUI = targetFile.FileType == ".pdf" && 
+                                          sourceContent.ContentType.ToLower() == "application/oxps";
+
+                    if (shouldLaunchUI)
+                    {
+                        // Launch UI to allow user to apply watermarks or other modifications before conversion
+                        PrintWorkflowUILauncher uiLauncher = args.UILauncher;
+                        if (uiLauncher != null)
+                        {
+                            // Launch the UI and wait for it to complete
+                            // The UI will be handled by JobActivatedMainPage.OnVirtualSessionPdlDataAvailable
+                            // which navigates to WatermarkManipulationExample
+                            uiLauncher.LaunchAndCompleteUIAsync().AsTask().Wait();
+                        }
+                    }
+
                     IRandomAccessStream outputStream = targetFile.OpenAsync(FileAccessMode.ReadWrite).AsTask().Result;
-                    var inputStream = soruceContent.GetInputStream();
+                    var inputStream = sourceContent.GetInputStream();
                     using (var outStream = outputStream.GetOutputStreamAt(0))
                     {
 
                         if (targetFile.FileType == ".pdf")
                         {
-                            if (soruceContent.ContentType.ToLower() == "application/oxps")
+                            if (sourceContent.ContentType.ToLower() == "application/oxps")
                             {
                                 // Get XPS to PDF PDL converter.
                                 PrintWorkflowPdlConverter converter = args.GetPdlConverter(PrintWorkflowPdlConversionType.XpsToPdf);
@@ -63,7 +80,7 @@ namespace Tasks
 
                                 converter.ConvertPdlAsync(printTicket, inputStream, outStream).AsTask().Wait();
                             }
-                            else if (soruceContent.ContentType.ToLower() == "application/pdf")
+                            else if (sourceContent.ContentType.ToLower() == "application/pdf")
                             {
                                 RandomAccessStream.CopyAndCloseAsync(inputStream, outStream).AsTask().Wait();
                             }
