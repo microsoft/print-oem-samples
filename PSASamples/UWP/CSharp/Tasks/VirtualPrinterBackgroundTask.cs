@@ -48,27 +48,10 @@ namespace Tasks
                 StorageFile targetFile = args.GetTargetFileAsync().AsTask().Result;
                 if (targetFile != null)
                 {
-                    // Check if we need to launch UI for XPS to PDF conversion
-                    bool shouldLaunchUI = targetFile.FileType == ".pdf" && 
-                                          sourceContent.ContentType.ToLower() == "application/oxps";
-
-                    if (shouldLaunchUI)
-                    {
-                        // Launch UI to allow user to configure watermarks before conversion
-                        PrintWorkflowUILauncher uiLauncher = args.UILauncher;
-                        if (uiLauncher != null)
-                        {
-                            // Launch the UI and wait for it to complete
-                            // The UI will be handled by JobActivatedMainPage.OnVirtualSessionPdlDataAvailable
-                            // which navigates to WatermarkManipulationExample
-                            uiLauncher.LaunchAndCompleteUIAsync().AsTask().Wait();
-                        }
-                    }
-
                     IRandomAccessStream outputStream = targetFile.OpenAsync(FileAccessMode.ReadWrite).AsTask().Result;
                     IInputStream inputStream = sourceContent.GetInputStream();
                     
-                    // Apply watermarks if source is XPS
+                    // Apply watermarks if source is XPS - do this AFTER UI completes so user settings are applied
                     if (sourceContent.ContentType.ToLower() == "application/oxps")
                     {
                         // Get the XPS document data stream from the source content.
@@ -85,11 +68,24 @@ namespace Tasks
 
                     using (var outStream = outputStream.GetOutputStreamAt(0))
                     {
-
                         if (targetFile.FileType == ".pdf")
                         {
                             if (sourceContent.ContentType.ToLower() == "application/oxps")
                             {
+                                bool shouldLaunchUI = targetFile.FileType == ".pdf" && sourceContent.ContentType.ToLower() == "application/oxps";
+                                if (shouldLaunchUI)
+                                {
+                                    // Launch UI to allow user to configure watermarks before conversion
+                                    PrintWorkflowUILauncher uiLauncher = args.UILauncher;
+                                    if (uiLauncher != null)
+                                    {
+                                        // Launch the UI and wait for it to complete
+                                        // The UI will be handled by JobActivatedMainPage.OnVirtualSessionPdlDataAvailable
+                                        // which navigates to WatermarkManipulationExample
+                                        // User's settings will be saved to LocalStorage
+                                        uiLauncher.LaunchAndCompleteUIAsync().AsTask().Wait();
+                                    }
+                                }
                                 // Get XPS to PDF PDL converter.
                                 PrintWorkflowPdlConverter converter = args.GetPdlConverter(PrintWorkflowPdlConversionType.XpsToPdf);
                                 // Convert XPS to PDF and write contents to outputStream.
