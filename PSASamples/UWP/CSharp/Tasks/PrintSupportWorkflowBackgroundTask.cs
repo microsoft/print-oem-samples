@@ -119,7 +119,7 @@ namespace Tasks
                     var xpsContentStream = args.SourceContent.GetInputStream();
                     PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel = new PrintWorkflowObjectModelSourceFileContent(xpsContentStream);
 
-                    XpsPageWatermarker watermarker = ConfigureWatermarker();
+                    XpsPageWatermarker watermarker = GetXpsPageWatermarker();
 
                     // Adds the watermark to the XPS document.
                     var document = new XpsSequentialDocument(xpsContentObjectModel);
@@ -169,7 +169,7 @@ namespace Tasks
             });
         }
 
-        private XpsPageWatermarker ConfigureWatermarker()
+        private XpsPageWatermarker GetXpsPageWatermarker()
         {
             XpsPageWatermarker watermarker = new XpsPageWatermarker();
 

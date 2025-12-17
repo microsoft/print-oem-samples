@@ -74,7 +74,7 @@ namespace Tasks
                         // Get the XPS document data stream from the source content.
                         PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel = new PrintWorkflowObjectModelSourceFileContent(inputStream);
 
-                        XpsPageWatermarker watermarker = ConfigureWatermarker();
+                        XpsPageWatermarker watermarker = GetXpsPageWatermarker();
 
                         // Adds the watermark to the XPS document.
                         var document = new XpsSequentialDocument(xpsContentObjectModel);
@@ -127,7 +127,7 @@ namespace Tasks
         /// <summary>
         /// Configure the watermarker with settings from LocalStorage (saved by the UI)
         /// </summary>
-        private XpsPageWatermarker ConfigureWatermarker()
+        private XpsPageWatermarker GetXpsPageWatermarker()
         {
             XpsPageWatermarker watermarker = new XpsPageWatermarker();
 

@@ -35,9 +35,9 @@ namespace winrt::XpsUtil::implementation
         void AddWatermarkImage(com_ptr<IXpsOMPage> const& xpsPage);
         void AddImageToPage(com_ptr<IXpsOMPage> const& xpsPage, _In_ const XPS_SIZE& pageDimensions);
 
-        HRESULT CreateImageResource(_In_ const std::wstring imageFileName, _In_ const std::wstring imagePartName, _Out_ IXpsOMImageResource** imageResource);
-        HRESULT AddImageToVisualCollection(com_ptr<IXpsOMPage> const& xpsPage, IXpsOMImageResource* imageResource, XPS_SIZE* imageDim, float dpiX, float dpiY, XPS_RECT rectForImage, std::wstring imageFileShortDescription);
-        HRESULT CreateRectanglePath(const XPS_RECT& rect, IXpsOMPath** rectPath);
+        HRESULT CreateImageResource(_In_ const std::wstring imageFileName, _In_ const std::wstring imagePartName, _Out_ IXpsOMImageResource** imageResource) noexcept;
+        HRESULT AddImageToVisualCollection(com_ptr<IXpsOMPage> const& xpsPage, IXpsOMImageResource* imageResource, XPS_SIZE* imageDim, float dpiX, float dpiY, XPS_RECT rectForImage, std::wstring imageFileShortDescription) noexcept;
+        HRESULT CreateRectanglePath(const XPS_RECT& rect, IXpsOMPath** rectPath) noexcept;
     };
 }
 namespace winrt::XpsUtil::factory_implementation
