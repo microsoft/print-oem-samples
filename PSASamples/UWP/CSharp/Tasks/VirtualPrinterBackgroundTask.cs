@@ -75,9 +75,8 @@ namespace Tasks
                                 }
                                 else if (uiResult != PrintWorkflowUICompletionStatus.Completed)
                                 {
-                                    // UI failed for some other reason
-                                    jobStatus = PrintWorkflowSubmittedStatus.Failed;
-                                    return;
+                                    // UI failed for some other reason, throw exception
+                                    throw new InvalidOperationException($"Print UI failed with status: {uiResult}");
                                 }
 
                                 // Get the XPS document data stream from the source content.
