@@ -141,10 +141,7 @@
       <DependentUpon>VirtualPrinterBgTask.idl</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
-    <ClCompile Include="WorkflowBgTask.cpp">
-      <DependentUpon>WorkflowBgTask.idl</DependentUpon>
-      <SubType>Code</SubType>
-    </ClCompile>
+    <ClCompile Include="WorkflowBgTask.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="LocalStorageHelper.idl">

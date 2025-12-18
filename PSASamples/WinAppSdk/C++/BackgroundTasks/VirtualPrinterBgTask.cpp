@@ -41,7 +41,7 @@ namespace winrt::BackgroundTasks::implementation
 		m_session.VirtualPrinterDataAvailable(m_dataAvailToken);
 	}
 
-	XpsUtil::XpsPageWatermarker VirtualPrinterBgTask::ConfgiureWatermarker()
+	XpsUtil::XpsPageWatermarker VirtualPrinterBgTask::ConfigureWatermarker()
 	{
 		XpsUtil::XpsPageWatermarker waterMarker;
 		winrt::hstring watermarkText;
@@ -110,7 +110,7 @@ namespace winrt::BackgroundTasks::implementation
 				}
 				PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel(inputStream);
 				XpsUtil::XpsSequentialDocument xpsDocument(xpsContentObjectModel);
-				auto watermarker = ConfgiureWatermarker();
+				auto watermarker = ConfigureWatermarker();
 				IInputStream watermarkedStream = xpsDocument.GetWatermarkedStream(watermarker);
 
 				PrintWorkflowPdlConverter converter = args.GetPdlConverter(PrintWorkflowPdlConversionType::XpsToPdf);

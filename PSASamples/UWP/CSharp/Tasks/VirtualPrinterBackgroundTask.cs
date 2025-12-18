@@ -51,41 +51,40 @@ namespace Tasks
                     IRandomAccessStream outputStream = targetFile.OpenAsync(FileAccessMode.ReadWrite).AsTask().Result;
                     IInputStream inputStream = sourceContent.GetInputStream();
                     
-                    // Apply watermarks if source is XPS - do this AFTER UI completes so user settings are applied
-                    if (sourceContent.ContentType.ToLower() == "application/oxps")
-                    {
-                        // Get the XPS document data stream from the source content.
-                        PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel = new PrintWorkflowObjectModelSourceFileContent(inputStream);
-
-                        XpsPageWatermarker watermarker = ConfigureWatermarker();
-
-                        // Adds the watermark to the XPS document.
-                        var document = new XpsSequentialDocument(xpsContentObjectModel);
-                        
-                        // Get the watermarked stream to use for conversion or direct output
-                        inputStream = document.GetWatermarkedStream(watermarker);
-                    }
-
                     using (var outStream = outputStream.GetOutputStreamAt(0))
                     {
                         if (targetFile.FileType == ".pdf")
                         {
                             if (sourceContent.ContentType.ToLower() == "application/oxps")
                             {
-                                bool shouldLaunchUI = targetFile.FileType == ".pdf" && sourceContent.ContentType.ToLower() == "application/oxps";
-                                if (shouldLaunchUI)
+                                // Launch UI to allow user to configure watermarks before conversion
+                                PrintWorkflowUILauncher uiLauncher = args.UILauncher;
+
+                                // Launch the UI and wait for it to complete
+                                // The UI will be handled by JobActivatedMainPage.OnVirtualSessionPdlDataAvailable
+                                // which navigates to WatermarkManipulationExample
+                                // User's settings will be saved to LocalStorage
+                                var uiResult = uiLauncher.LaunchAndCompleteUIAsync().AsTask().Result;
+
+                                // Check if user canceled the operation
+                                if (uiResult == PrintWorkflowUICompletionStatus.UserCanceled)
                                 {
-                                    // Launch UI to allow user to configure watermarks before conversion
-                                    PrintWorkflowUILauncher uiLauncher = args.UILauncher;
-                                    if (uiLauncher != null)
-                                    {
-                                        // Launch the UI and wait for it to complete
-                                        // The UI will be handled by JobActivatedMainPage.OnVirtualSessionPdlDataAvailable
-                                        // which navigates to WatermarkManipulationExample
-                                        // User's settings will be saved to LocalStorage
-                                        uiLauncher.LaunchAndCompleteUIAsync().AsTask().Wait();
-                                    }
+                                    // User canceled, abort the print job
+                                    jobStatus = PrintWorkflowSubmittedStatus.Canceled;
+                                    return;
                                 }
+
+                                // Get the XPS document data stream from the source content.
+                                PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel = new PrintWorkflowObjectModelSourceFileContent(inputStream);
+
+                                XpsPageWatermarker watermarker = ConfigureWatermarker();
+
+                                // Adds the watermark to the XPS document.
+                                var document = new XpsSequentialDocument(xpsContentObjectModel);
+
+                                // Get the watermarked stream to use for conversion or direct output
+                                inputStream = document.GetWatermarkedStream(watermarker);
+
                                 // Get XPS to PDF PDL converter.
                                 PrintWorkflowPdlConverter converter = args.GetPdlConverter(PrintWorkflowPdlConversionType.XpsToPdf);
                                 // Convert XPS to PDF and write contents to outputStream.

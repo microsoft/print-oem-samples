@@ -21,7 +21,7 @@ namespace winrt::BackgroundTasks::implementation
         bool HasPdlConverter(winrt::hstring const& documentFormat);
         winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowPdlConverter GetPdlConverter(
             winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowPdlModificationRequestedEventArgs const& args, winrt::hstring const& documentFormat);
-        XpsUtil::XpsPageWatermarker ConfgiureWatermarker();
+        XpsUtil::XpsPageWatermarker ConfigureWatermarker();
 
         winrt::event_token m_jobStartToken;
         winrt::event_token m_pdlModificationToken;

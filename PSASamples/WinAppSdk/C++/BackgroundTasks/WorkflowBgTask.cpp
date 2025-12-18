@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "WorkflowBgTask.h"
 #if __has_include("WorkflowBgTask.g.cpp")
 #include "WorkflowBgTask.g.cpp"
@@ -54,27 +54,26 @@ namespace winrt::BackgroundTasks::implementation
 
 	winrt::hstring WorkflowBgTask::GetDocumentFormat(IppPrintDevice const& printer)
 	{
-		auto requestedAttributes = winrt::single_threaded_vector<winrt::hstring>({ L"document-format-default", L"document-format-supported" });
-		auto attributes = printer.GetPrinterAttributes(requestedAttributes);
+			auto requestedAttributes = winrt::single_threaded_vector<winrt::hstring>({ L"document-format-default", L"document-format-supported" });
+			auto attributes = printer.GetPrinterAttributes(requestedAttributes);
 
-
-		// Lookup the IPP attribute from the map.
+			// Lookup the IPP attribute from the map.
 		auto defaultFormat = attributes.Lookup(L"document-format-default").GetKeywordArray().First().Current();
 
-		// If the default format does not have a PDL converter, pick the first supported format.
-		if (!HasPdlConverter(defaultFormat))
-		{
-			for (winrt::hstring const documentFormat : attributes.Lookup(L"document-format-supported").GetKeywordArray())
+			// If the default format does not have a PDL converter, pick the first supported format.
+			if (!HasPdlConverter(defaultFormat))
 			{
-				if (HasPdlConverter(documentFormat))
+			for (winrt::hstring const documentFormat : attributes.Lookup(L"document-format-supported").GetKeywordArray())
 				{
-					return documentFormat;
+					if (HasPdlConverter(documentFormat))
+					{
+						return documentFormat;
+					}
 				}
 			}
-		}
 
-		return defaultFormat;
-	}
+			return defaultFormat;
+		}
 
 	PrintWorkflowPdlConverter WorkflowBgTask::GetPdlConverter(PrintWorkflowPdlModificationRequestedEventArgs const& args, winrt::hstring const& documentFormat)
 	{
@@ -100,7 +99,7 @@ namespace winrt::BackgroundTasks::implementation
 		}
 	}
 
-	XpsUtil::XpsPageWatermarker WorkflowBgTask::ConfgiureWatermarker()
+	XpsUtil::XpsPageWatermarker WorkflowBgTask::ConfigureWatermarker()
 	{
 		XpsUtil::XpsPageWatermarker waterMarker;
 		winrt::hstring watermarkText;
@@ -128,7 +127,7 @@ namespace winrt::BackgroundTasks::implementation
 
 	void WorkflowBgTask::OnPdlModificationRequested(PrintWorkflowJobBackgroundSession const& /*sender*/, PrintWorkflowPdlModificationRequestedEventArgs const& args)
 	{
-		auto cleanup = wil::scope_exit([&] 
+		auto cleanup = wil::scope_exit([&]
 			{
 				args.GetDeferral().Complete();
 				m_taskDeferral.Complete();
@@ -149,25 +148,36 @@ namespace winrt::BackgroundTasks::implementation
 					THROW_HR_MSG(E_UNEXPECTED, "Print UI failed");
 				}
 			}
-			auto documentFormat = GetDocumentFormat(args.PrinterJob().Printer());
-			auto targetStream = args.CreateJobOnPrinter(documentFormat);
-			
+
 			auto sourceContent = args.SourceContent();
 			auto inputStream = sourceContent.GetInputStream();
+
 			if (!_wcsicmp(sourceContent.ContentType().c_str(), L"application/oxps"))
 			{
+				// Source is OXPS - convert to printer's preferred format
+				auto documentFormat = GetDocumentFormat(args.PrinterJob().Printer());
+
 				PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel(inputStream);
 				XpsUtil::XpsSequentialDocument xpsDocument(xpsContentObjectModel);
-				auto watermarker = ConfgiureWatermarker();
+				auto watermarker = ConfigureWatermarker();
 				IInputStream watermarkedStream = xpsDocument.GetWatermarkedStream(watermarker);
 
-				auto pldConverter = args.GetPdlConverter(PrintWorkflowPdlConversionType::XpsToPdf);
+				// Create job with the format we'll actually send (after conversion)
+				auto targetStream = args.CreateJobOnPrinter(documentFormat);
+
+				// Convert to the target format (matches what we promised to CreateJobOnPrinter)
+				auto pldConverter = GetPdlConverter(args, documentFormat);
 				pldConverter.ConvertPdlAsync(args.PrinterJob().GetJobPrintTicket(), watermarkedStream, targetStream.GetOutputStream()).get();
 				targetStream.CompleteStreamSubmission(PrintWorkflowSubmittedStatus::Succeeded);
 			}
 			else
 			{
-				// If the source content is not OXPS assume that it is of target PDL and write to the target stream
+				// Source is not OXPS - pass it through using its actual format
+				auto documentFormat = sourceContent.ContentType();
+
+				// Create job with the source format (no conversion)
+				auto targetStream = args.CreateJobOnPrinter(documentFormat);
+
 				RandomAccessStream::CopyAndCloseAsync(inputStream, targetStream.GetOutputStream()).get();
 				targetStream.CompleteStreamSubmission(PrintWorkflowSubmittedStatus::Succeeded);
 			}

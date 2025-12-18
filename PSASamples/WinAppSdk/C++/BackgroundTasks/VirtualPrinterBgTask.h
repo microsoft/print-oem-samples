@@ -19,7 +19,7 @@ namespace winrt::BackgroundTasks::implementation
         void OnPdlDataAvailable(winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowVirtualPrinterSession const& session, winrt::Windows::Graphics::Printing::Workflow::PrintWorkflowVirtualPrinterDataAvailableEventArgs const& args);
 
     private:
-        XpsUtil::XpsPageWatermarker ConfgiureWatermarker();
+        XpsUtil::XpsPageWatermarker ConfigureWatermarker();
 
         winrt::Windows::ApplicationModel::Background::BackgroundTaskDeferral m_taskDeferral{ nullptr };
         winrt::Windows::Devices::Printers::IppPrintDevice m_printDevice{ nullptr };
