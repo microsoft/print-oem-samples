@@ -56,6 +56,35 @@ Finally, build and run the sample application, which will install it on your sys
 
 [Printing](https://microsoft.visualstudio.com/DefaultCollection/OS.Samples/_git/collections.universal?_a=contents&path=%2FSamples%2FPrinting)  
 
+This repository also contains Print Support App (PSA) samples demonstrating printer customization capabilities across different platforms:
+
+### PSASamples/UWP
+A Universal Windows Platform (UWP) C# Print Support Application sample demonstrating:
+- Print workflow customization and background tasks
+- Print ticket manipulation
+- XPS document watermarking using the XPS Object Model
+- Job notification handling
+- Virtual printer implementation
+- IPP printer URL configuration
+- Settings and job activation scenarios
+
+The UWP sample includes three main components:
+- **PrintSupportApp**: The main UWP application with UI for printer settings and workflow customization
+- **Tasks**: Background tasks for print support extension, workflow processing, and virtual printer handling
+- **XpsUtil**: Native Windows Runtime Component for XPS document manipulation
+
+### PSASamples/WinAppSdk
+Windows App SDK samples for Print Support Applications in C++ demonstrating modern Windows app development with:
+- Print Support Extension background tasks
+- Workflow background task processing
+- Virtual printer implementation
+- XPS document manipulation
+- Job and user activation scenarios
+- Modal window handling for printer settings
+- Watermark preview and customization
+
+The WinAppSdk samples leverage the Windows App SDK for enhanced functionality and deployment flexibility.
+
 ## System requirements
 -------------------
 

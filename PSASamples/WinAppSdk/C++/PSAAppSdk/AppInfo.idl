@@ -1,0 +1,11 @@
+// Copyright (c) Microsoft Corporation and Contributors.
+// Licensed under the MIT License.
+
+namespace PSAAppSdk
+{
+    [default_interface]
+    runtimeclass AppInfo : Microsoft.UI.Xaml.Controls.Page
+    {
+        AppInfo();
+    }
+}

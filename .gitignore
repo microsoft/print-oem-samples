@@ -13,6 +13,7 @@
 *.userprefs
 
 # Build results
+Generated Files/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -23,6 +24,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+.sarif/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -50,6 +52,7 @@ artifacts/
 
 *_i.c
 *_p.c
+*_p.h
 *_i.h
 *.ilk
 *.meta
@@ -194,6 +197,7 @@ _pkginfo.txt
 ClientBin/
 ~$*
 *~
+*.dep
 *.dbmdl
 *.dbproj.schemaview
 *.jfm

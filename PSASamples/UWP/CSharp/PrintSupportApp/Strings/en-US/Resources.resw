@@ -1,0 +1,23 @@
+﻿<root>
+  <data name="PackageDisplayName">
+    <value>AppExtensionTestApp</value>
+  </data>
+  <data name="AppExtensionDisplayName">
+    <value>this is app display name</value>
+  </data>
+  <data name="AppExtensionDescription">
+    <value>this is app description</value>
+  </data>
+  <data name="PackageExtensionDisplayName">
+    <value>this is package display name</value>
+  </data>
+  <data name="PackageExtensionDescription">
+    <value>this is package description</value>
+  </data>
+  <data name="PdfPrintDisplayName">
+    <value>VirtualPdfPrinter</value>
+  </data>
+  <data name="PsPrintDisplayName">
+    <value>VirtualPostScriptPrinter</value>
+  </data>
+</root>

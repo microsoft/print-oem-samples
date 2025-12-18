@@ -1,0 +1,8 @@
+namespace PSAAppSdk
+{
+    [default_interface]
+    runtimeclass PrinterSettings : Microsoft.UI.Xaml.Controls.Page
+    {
+        PrinterSettings(Windows.Graphics.Printing.PrintSupport.PrintSupportSettingsActivatedEventArgs args);
+    }
+}

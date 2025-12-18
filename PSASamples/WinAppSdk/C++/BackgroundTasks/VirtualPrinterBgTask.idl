@@ -1,0 +1,9 @@
+namespace BackgroundTasks
+{
+    [bindable]
+    [default_interface]
+    runtimeclass VirtualPrinterBgTask : Windows.ApplicationModel.Background.IBackgroundTask
+    {
+        VirtualPrinterBgTask();
+    }
+}
