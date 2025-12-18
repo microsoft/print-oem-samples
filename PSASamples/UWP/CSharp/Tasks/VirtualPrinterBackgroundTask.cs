@@ -73,6 +73,12 @@ namespace Tasks
                                     jobStatus = PrintWorkflowSubmittedStatus.Canceled;
                                     return;
                                 }
+                                else if (uiResult != PrintWorkflowUICompletionStatus.Completed)
+                                {
+                                    // UI failed for some other reason
+                                    jobStatus = PrintWorkflowSubmittedStatus.Failed;
+                                    return;
+                                }
 
                                 // Get the XPS document data stream from the source content.
                                 PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel = new PrintWorkflowObjectModelSourceFileContent(inputStream);
