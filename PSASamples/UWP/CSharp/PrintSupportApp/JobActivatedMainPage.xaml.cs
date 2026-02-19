@@ -51,11 +51,25 @@ namespace PrintSupportApp
         {
             SessionJobNotificationDeferral = args.GetDeferral();
 
+            PrintWorkflowPrinterJobStatus status = PrintWorkflowPrinterJobStatus.Error;
+
+            try
+            {
+                // Get the job status BEFORE navigating to the UI page
+                var printJob = args.PrinterJob;
+                status = printJob.GetJobStatus();
+            }
+            catch (Exception ex)
+            {
+                // If we can't get the status, default to Error
+                System.Diagnostics.Debug.WriteLine($"Failed to get job status: {ex.Message}");
+            }
+
             // Note: OnSessionJobNotification is not called in an UI thread, so we must use the CoreWindow Dispatcher to run any code that updates the UI.
             await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 SetNavigationViewSelectedItem("JobNotificationExample");
-                contentFrame.Navigate(typeof(JobNotificationExample), args);
+                contentFrame.Navigate(typeof(JobNotificationExample), status);
             });
         }
 
