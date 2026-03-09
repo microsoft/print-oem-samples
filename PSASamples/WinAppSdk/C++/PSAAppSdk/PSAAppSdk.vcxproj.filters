@@ -25,6 +25,7 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="ModalWindowHandler.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
@@ -102,5 +103,8 @@
     <Font Include="Assets\Fonts\Roboto-Black.ttf">
       <Filter>Assets\Fonts</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PSAAppSdk.rc" />
   </ItemGroup>
 </Project>

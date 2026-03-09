@@ -158,6 +158,7 @@
       <DependentUpon>PrinterSettings.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="UserLaunchMainPage.xaml.h">
       <DependentUpon>UserLaunchMainPage.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -322,6 +323,9 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="Assets\Fonts\Roboto-Black.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PSAAppSdk.rc" />
   </ItemGroup>
   <!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
