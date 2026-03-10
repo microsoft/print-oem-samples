@@ -50,10 +50,11 @@
   </PropertyGroup>
 
   <!-- Copy XpsUtil.dll to output so it's available at runtime -->
+  <!-- Must be Content (not None) so it flows into the MSIX package of consuming apps -->
   <ItemGroup>
-    <None Include="..\$(XpsUtilPlatformPath)$(Configuration)\XpsUtil\XpsUtil.dll">
+    <Content Include="..\$(XpsUtilPlatformPath)$(Configuration)\XpsUtil\XpsUtil.dll">
       <Link>XpsUtil.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
 </Project>

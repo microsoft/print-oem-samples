@@ -10,13 +10,14 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
+    <WindowsPackageType>MSIX</WindowsPackageType>
     <Nullable>enable</Nullable>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <EnableDefaultPriItems>false</EnableDefaultPriItems>
     <!-- Package signing configuration -->
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>DF68C19A27F3EFFFBF476BF2EE5246439908703F</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>4652744C1060A23D8126A7A5B8822243A76838A5</PackageCertificateThumbprint>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +28,7 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\contoso_logo.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,6 +54,26 @@
     <ProjectReference Include="..\..\..\XpsUtil\XpsUtil.Projections\XpsUtil.Projections.csproj" />
   </ItemGroup>
 
+  <!--
+    Ensure Tasks.winmd is included in the app package so WinRT.Host.dll can resolve
+    the activatable background task classes at runtime.
+    We use CopyToOutputDirectory so it ends up next to Tasks.dll in the output folder,
+    and the MSIX packaging picks it up from there.
+  -->
+  <Target Name="IncludeTasksWinmd" AfterTargets="Build">
+    <ItemGroup>
+      <_TasksWinmdSource Include="..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\Tasks.winmd" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_TasksWinmdSource)"
+          DestinationFolder="$(OutputPath)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\Tasks.winmd')" />
+    <Message Text="Copied Tasks.winmd to $(OutputPath)" Importance="high"
+             Condition="Exists('..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\Tasks.winmd')" />
+    <Warning Text="Tasks.winmd not found at ..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\Tasks.winmd"
+             Condition="!Exists('..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\Tasks.winmd')" />
+  </Target>
+
   <!-- Define XPSUTIL_AVAILABLE to enable watermarking code -->
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);XPSUTIL_AVAILABLE</DefineConstants>
@@ -72,6 +94,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+  <!-- Registration-free WinRT activation manifest for native XpsUtil.dll -->
+  <ItemGroup>
+    <Content Include="XpsUtil.dll.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Target Name="CopyXpsUtilManifest" AfterTargets="Build">
+    <Copy SourceFiles="XpsUtil.dll.manifest" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+  </Target>
 
   <!-- Include string resources for localization -->
   <ItemGroup>
@@ -95,7 +127,6 @@
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
-    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>

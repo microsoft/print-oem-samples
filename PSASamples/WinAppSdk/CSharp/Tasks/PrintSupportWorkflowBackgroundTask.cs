@@ -84,60 +84,56 @@ namespace Tasks
         private void OnPdlModificationRequested(PrintWorkflowJobBackgroundSession sender, PrintWorkflowPdlModificationRequestedEventArgs args)
         {
             var deferral = args.GetDeferral();
-            args.UILauncher.LaunchAndCompleteUIAsync().AsTask().ContinueWith(launchUiTask =>
+            try
             {
-                if (launchUiTask.Result == PrintWorkflowUICompletionStatus.UserCanceled)
+                var uiResult = args.UILauncher.LaunchAndCompleteUIAsync().AsTask().GetAwaiter().GetResult();
+                if (uiResult != PrintWorkflowUICompletionStatus.Completed)
                 {
-                    deferral.Complete();
-                    TaskInstanceDeferral?.Complete();
+                    if (uiResult == PrintWorkflowUICompletionStatus.UserCanceled)
+                    {
+                        args.Configuration.AbortPrintFlow(PrintWorkflowJobAbortReason.UserCanceled);
+                    }
                     return;
                 }
 
-                string documentFormat = GetDocumentFormat(args.PrinterJob.Printer);
-
-                // Add custom job attributes.
-                var jobAttributes = new Dictionary<string, IppAttributeValue>();
-
-                if (!string.IsNullOrEmpty(LocalStorageUtil.GetJobPasswordEncryptionMethod()))
-                {
-                    var operationAttributeCollection = new Dictionary<string, IppAttributeValue>
-                    {
-                        {"job-password",  IppAttributeValue.CreateOctetString(LocalStorageUtil.GetEncryptedJobPassword())},
-                        {"job-password-encryption", IppAttributeValue.CreateKeyword(LocalStorageUtil.GetJobPasswordEncryptionMethod())}
-                    };
-                    jobAttributes.Add("msft-operation-attribute-col", IppAttributeValue.CreateCollection(operationAttributeCollection));
-                    LocalStorageUtil.ClearJobPassword();
-                }
-
-                var targetStream = args.CreateJobOnPrinterWithAttributes(jobAttributes, documentFormat);
+                var sourceContent = args.SourceContent;
+                var inputStream = sourceContent.GetInputStream();
 
 #if XPSUTIL_AVAILABLE
-                if (string.Equals(args.SourceContent.ContentType, "application/OXPS", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(sourceContent.ContentType, "application/OXPS", StringComparison.OrdinalIgnoreCase))
                 {
-                    //
-                    // Example: Adding watermarks to a XPS document.
-                    //
+                    // Source is OXPS - convert to printer's preferred format
+                    string documentFormat = GetDocumentFormat(args.PrinterJob.Printer);
 
-                    // Get the XPS document data stream from the source content.
-                    var xpsContentStream = args.SourceContent.GetInputStream();
-                    PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel = new PrintWorkflowObjectModelSourceFileContent(xpsContentStream);
+                    // Add custom job attributes.
+                    var jobAttributes = new Dictionary<string, IppAttributeValue>();
+
+                    if (!string.IsNullOrEmpty(LocalStorageUtil.GetJobPasswordEncryptionMethod()))
+                    {
+                        var operationAttributeCollection = new Dictionary<string, IppAttributeValue>
+                        {
+                            {"job-password",  IppAttributeValue.CreateOctetString(LocalStorageUtil.GetEncryptedJobPassword())},
+                            {"job-password-encryption", IppAttributeValue.CreateKeyword(LocalStorageUtil.GetJobPasswordEncryptionMethod())}
+                        };
+                        jobAttributes.Add("msft-operation-attribute-col", IppAttributeValue.CreateCollection(operationAttributeCollection));
+                        LocalStorageUtil.ClearJobPassword();
+                    }
+
+                    PrintWorkflowObjectModelSourceFileContent xpsContentObjectModel = new PrintWorkflowObjectModelSourceFileContent(inputStream);
 
                     XpsPageWatermarker watermarker = GetXpsPageWatermarker();
-
-                    // Adds the watermark to the XPS document.
                     var document = new XpsSequentialDocument(xpsContentObjectModel);
 
                     document.XpsGenerationFailed += (doc, e) => {
                         args.Configuration.AbortPrintFlow(PrintWorkflowJobAbortReason.JobFailed);
-                        deferral.Complete();
-                        TaskInstanceDeferral?.Complete();
                     };
 
                     IInputStream watermarkedStream = document.GetWatermarkedStream(watermarker);
 
-                    //
-                    // Example: Custom Rendering of XPS document to printer supported PDLs.
-                    //
+                    // Create job on printer with the format we'll send after conversion
+                    var targetStream = args.CreateJobOnPrinterWithAttributes(jobAttributes, documentFormat);
+
+                    // Get the PDL converter for the target format
                     PrintWorkflowPdlConverter? pdlConverter = null;
                     switch (documentFormat)
                     {
@@ -152,28 +148,36 @@ namespace Tasks
                             break;
                     }
 
-                    // Convert the XPS document to the printer supported PDL and write it to the targetStream.
                     if (pdlConverter != null)
                     {
                         pdlConverter.ConvertPdlAsync(args.PrinterJob.GetJobPrintTicket(),
                                                      watermarkedStream,
                                                      targetStream.GetOutputStream()
-                                                     ).AsTask().Wait();
+                                                     ).AsTask().GetAwaiter().GetResult();
                     }
+
+                    targetStream.CompleteStreamSubmission(PrintWorkflowSubmittedStatus.Succeeded);
                 }
                 else
 #endif
                 {
-                    // Without XpsUtil, print raw data without modification
-                    RandomAccessStream.CopyAsync(args.SourceContent.GetInputStream(), targetStream.GetOutputStream()).AsTask().Wait();
+                    // Source is not OXPS - pass it through using its actual format
+                    var documentFormat = sourceContent.ContentType;
+                    var targetStream = args.CreateJobOnPrinter(documentFormat);
+
+                    RandomAccessStream.CopyAndCloseAsync(inputStream, targetStream.GetOutputStream()).AsTask().GetAwaiter().GetResult();
+                    targetStream.CompleteStreamSubmission(PrintWorkflowSubmittedStatus.Succeeded);
                 }
-
-                // Mark the stream submission as Succeeded.
-                targetStream.CompleteStreamSubmission(PrintWorkflowSubmittedStatus.Succeeded);
-
+            }
+            catch (Exception)
+            {
+                args.Configuration.AbortPrintFlow(PrintWorkflowJobAbortReason.JobFailed);
+            }
+            finally
+            {
                 deferral.Complete();
                 TaskInstanceDeferral?.Complete();
-            });
+            }
         }
 
 #if XPSUTIL_AVAILABLE
