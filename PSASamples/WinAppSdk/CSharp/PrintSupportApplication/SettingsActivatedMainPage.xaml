@@ -20,6 +20,11 @@
                     <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8C8;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
+            <NavigationViewItem Content="App Info" Tag="AppInfo">
+                <NavigationViewItem.Icon>
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE76D;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
         </NavigationView.MenuItems>
         <Frame x:Name="contentFrame" />
     </NavigationView>

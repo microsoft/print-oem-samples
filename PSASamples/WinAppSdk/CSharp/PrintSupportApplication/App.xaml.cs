@@ -1,7 +1,5 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
 using Windows.Graphics.Printing.PrintSupport;
 using Windows.Graphics.Printing.Workflow;
 
@@ -15,12 +13,33 @@ namespace PrintSupportApplication
         private Window? m_window;
 
         /// <summary>
+        /// Stores the settings activation args so other pages can access the printer context.
+        /// </summary>
+        public static PrintSupportSettingsActivatedEventArgs? SettingsActivationArgs { get; private set; }
+
+        /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App()
         {
             this.InitializeComponent();
+
+            // Handle re-activation when the app is already running
+            // (e.g., L3 settings page activates the PSA while it's open)
+            Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().Activated += OnAppActivated;
+        }
+
+        private void OnAppActivated(object? sender, Microsoft.Windows.AppLifecycle.AppActivationArguments args)
+        {
+            if (args.Kind == Microsoft.Windows.AppLifecycle.ExtendedActivationKind.PrintSupportSettingsUI)
+            {
+                var settingsArgs = args.Data as PrintSupportSettingsActivatedEventArgs;
+                if (settingsArgs != null)
+                {
+                    SettingsActivationArgs = settingsArgs;
+                }
+            }
         }
 
         /// <summary>
@@ -29,18 +48,19 @@ namespace PrintSupportApplication
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            // Get activation arguments using AppInstance to determine activation type
-            var instanceArgs = AppInstance.GetActivatedEventArgs();
+            // Use the Windows App SDK API for activation detection (recommended for WinUI 3)
+            var appActivationArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
+            var activationKind = appActivationArgs.Kind;
 
-            if (instanceArgs.Kind == ActivationKind.PrintSupportSettingsUI)
+            if (activationKind == Microsoft.Windows.AppLifecycle.ExtendedActivationKind.PrintSupportSettingsUI)
             {
                 // Settings UI activation
-                HandleSettingsActivation(instanceArgs as PrintSupportSettingsActivatedEventArgs);
+                HandleSettingsActivation(appActivationArgs.Data as PrintSupportSettingsActivatedEventArgs);
             }
-            else if (instanceArgs.Kind == ActivationKind.PrintSupportJobUI)
+            else if (activationKind == Microsoft.Windows.AppLifecycle.ExtendedActivationKind.PrintSupportJobUI)
             {
                 // Job UI activation
-                HandleJobActivation(instanceArgs as PrintWorkflowJobActivatedEventArgs);
+                HandleJobActivation(appActivationArgs.Data as PrintWorkflowJobActivatedEventArgs);
             }
             else
             {
@@ -64,6 +84,7 @@ namespace PrintSupportApplication
         private void HandleSettingsActivation(PrintSupportSettingsActivatedEventArgs? settingsArgs)
         {
             if (settingsArgs == null) return;
+            SettingsActivationArgs = settingsArgs;
 
             m_window = new Window();
             var rootFrame = new Frame();

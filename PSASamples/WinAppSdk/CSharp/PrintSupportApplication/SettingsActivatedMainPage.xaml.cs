@@ -36,6 +36,10 @@ namespace PrintSupportApplication
             {
                 contentFrame.Navigate(typeof(PrintTicketManipulationExample), Session);
             }
+            else if (tag == "AppInfo")
+            {
+                contentFrame.Navigate(typeof(AppInfo));
+            }
         }
 
         private void NavViewLoaded(object sender, RoutedEventArgs e)

@@ -7,10 +7,23 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <GridView>
-        <TextBox
-            x:Name="PackageFamilyNameTextBox"
-            Header="Package Family Name"
-            IsReadOnly="True" />
-    </GridView>
+    <Grid Padding="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Spacing="12">
+            <TextBox
+                x:Name="PackageFamilyNameTextBox"
+                Header="Package Family Name"
+                IsReadOnly="True" />
+            <TextBox
+                x:Name="PrinterNameTextBox"
+                Header="Printer Names"
+                IsReadOnly="True"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                TextAlignment="Left" />
+        </StackPanel>
+    </Grid>
 </Page>
