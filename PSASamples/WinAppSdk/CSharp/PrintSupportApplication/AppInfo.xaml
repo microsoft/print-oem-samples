@@ -12,11 +12,5 @@
             x:Name="PackageFamilyNameTextBox"
             Header="Package Family Name"
             IsReadOnly="True" />
-        <TextBox
-            x:Name="PrinterNameTextBox"
-            Header="Printer Name"
-            IsReadOnly="True"
-            Visibility="Collapsed"
-            />
     </GridView>
 </Page>
