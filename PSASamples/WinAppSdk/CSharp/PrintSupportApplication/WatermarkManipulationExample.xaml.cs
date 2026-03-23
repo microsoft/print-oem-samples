@@ -101,10 +101,10 @@ namespace PrintSupportApplication
             if (requestedAttributes.All(k => attributes.ContainsKey(k)))
             {
                 var maxPasswordLength = 0;
-                var jobPasswordSuppoted = attributes["job-password-supported"];
-                if (jobPasswordSuppoted.Kind == IppAttributeValueKind.Integer)
+                var jobPasswordSupported = attributes["job-password-supported"];
+                if (jobPasswordSupported.Kind == IppAttributeValueKind.Integer)
                 {
-                    maxPasswordLength = jobPasswordSuppoted.GetIntegerArray().First();
+                    maxPasswordLength = jobPasswordSupported.GetIntegerArray().First();
                 }
 
                 if (maxPasswordLength > 0)

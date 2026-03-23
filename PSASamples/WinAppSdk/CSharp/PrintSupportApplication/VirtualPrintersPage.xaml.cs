@@ -227,7 +227,7 @@ namespace PrintSupportApplication
                 parameters.PrinterName = printerName;
                 parameters.PrinterUri = printerUri;
                 parameters.PrintDeviceCapabilitiesPackageRelativeFilePath = "Config\\PrinterPdc.xml";
-                //parameters.PrintDeviceResourcesPackageRelativeFilePath = "Config\\PrinterPdr.xml";
+                parameters.PrintDeviceResourcesPackageRelativeFilePath = "Config\\PrinterPdr.xml";
                 parameters.PreferredInputFormat = (format == "OpenXps") ? VirtualPrinterPreferredInputFormat.OpenXps : VirtualPrinterPreferredInputFormat.PostScript;
                 parameters.SupportedInputFormats.Concat(supportedFormats);
                 parameters.EntryPoint = "Tasks.VirtualPrinterBackgroundTask";
