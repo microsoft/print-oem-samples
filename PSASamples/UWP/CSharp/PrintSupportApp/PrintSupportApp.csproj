@@ -176,7 +176,7 @@
     <Content Include="Assets\SplashScreen.scale-150.png" />
     <Content Include="Assets\SplashScreen.scale-400.png" />
     <Content Include="Config\PrinterPdc.xml" />
-	<Content Include="Config\PrinterPdr.xml" />
+    <Content Include="Config\PrinterPdr.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
