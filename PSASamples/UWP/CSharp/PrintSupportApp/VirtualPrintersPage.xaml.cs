@@ -8,6 +8,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
+#pragma warning disable CS8305 // Type is for evaluation purposes only and is subject to change or removal in future updates.
+
 namespace PrintSupportApp
 {
     public sealed partial class VirtualPrintersPage : Page

@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <Platforms>x86;x64;ARM64</Platforms>
+    <Nullable>enable</Nullable>
+    <RootNamespace>XpsUtil.Projections</RootNamespace>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <!-- Map .NET Platform to C++ Platform for output path -->
+  <PropertyGroup Condition="'$(Platform)' == 'x86'">
+    <XpsUtilPlatformPath></XpsUtilPlatformPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'x64'">
+    <XpsUtilPlatformPath>x64\</XpsUtilPlatformPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'ARM64'">
+    <XpsUtilPlatformPath>arm64\</XpsUtilPlatformPath>
+  </PropertyGroup>
+
+  <!-- This is a projection library - NOT a WinRT component -->
+  <!-- It consumes XpsUtil.winmd and generates C# projection classes -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.*" />
+  </ItemGroup>
+
+  <!-- Build dependency on XpsUtil C++ project -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\XpsUtil\XpsUtil.vcxproj">
+      <Project>{7b77cf65-1283-4417-8be7-299651392e71}</Project>
+      <Name>XpsUtil</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!-- Consume XpsUtil WinRT metadata and generate C# projections -->
+  <ItemGroup>
+    <CsWinRTInputs Include="..\$(XpsUtilPlatformPath)$(Configuration)\XpsUtil\XpsUtil.winmd" />
+  </ItemGroup>
+
+  <!-- Configure CsWinRT to generate projections for XpsUtil namespace -->
+  <PropertyGroup>
+    <!-- Include XpsUtil for projection generation -->
+    <CsWinRTIncludes>XpsUtil</CsWinRTIncludes>
+    <!-- This is NOT a component - just generating projections -->
+    <CsWinRTComponent>false</CsWinRTComponent>
+  </PropertyGroup>
+
+  <!-- Copy XpsUtil.dll to output so it's available at runtime -->
+  <!-- Must be Content (not None) so it flows into the MSIX package of consuming apps -->
+  <ItemGroup>
+    <Content Include="..\$(XpsUtilPlatformPath)$(Configuration)\XpsUtil\XpsUtil.dll">
+      <Link>XpsUtil.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

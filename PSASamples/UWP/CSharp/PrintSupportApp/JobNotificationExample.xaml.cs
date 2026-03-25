@@ -13,16 +13,14 @@ namespace PrintSupportApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.Parameter is PrintWorkflowJobNotificationEventArgs args)
+            if (e.Parameter is PrintWorkflowPrinterJobStatus status)
             {
-                OnSessionJobNotification(args);
+                DisplayJobStatus(status);
             }
         }
 
-        private void OnSessionJobNotification(PrintWorkflowJobNotificationEventArgs args)
+        private void DisplayJobStatus(PrintWorkflowPrinterJobStatus status)
         {
-            var printJob = args.PrinterJob;
-            var status = printJob.GetJobStatus();
             JobStatus.Text = status.ToString();
         }
     }

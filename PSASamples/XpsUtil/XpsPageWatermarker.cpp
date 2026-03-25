@@ -235,7 +235,10 @@ namespace winrt::XpsUtil::implementation
 
     HRESULT XpsPageWatermarker::CreateImageResource(_In_ const std::wstring imageFileName, _In_ const std::wstring imagePartName, _Out_ IXpsOMImageResource** imageResource) noexcept try
     {
-        THROW_IF_FAILED(E_INVALIDARG, imageFileName.empty() || imagePartName.empty());
+        if (imageFileName.empty() || imagePartName.empty())
+        {
+            THROW_IF_FAILED(E_INVALIDARG);
+		}
 
         com_ptr<IStream> imageStream;
         com_ptr<IOpcPartUri> imagePartUri;
