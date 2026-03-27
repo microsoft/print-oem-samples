@@ -504,6 +504,14 @@ code {
 </ul>
 </li>
 </ul>
+<p><strong>Troubleshooting:</strong></p>
+<ul>
+<li>If a print job fails when targeting an IPP printer emulated on the same machine, this is likely due to Windows network loopback restrictions on packaged apps. To fix this, open a PowerShell window <strong>as Administrator</strong> and run:
+<pre><code class="language-powershell">CheckNetIsolation.exe LoopbackExempt -a -n=&quot;{packageFamilyName}&quot;
+</code></pre>
+Replace <code>{packageFamilyName}</code> with the actual package family name of the PSA app (displayed in the WinUI popup when the app is first launched).
+</li>
+</ul>
 </details>
 <h2 id="resources">Resources</h2>
 <ul>
