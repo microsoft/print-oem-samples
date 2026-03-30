@@ -117,6 +117,14 @@ Initial Windows App SDK (WinUI 3) C++ implementation including:
   - `privateNetworkClientServer` - For IPP communication
   - Multi-instance support via `uap10:SupportsMultipleInstances="true"`
 
+**Troubleshooting:**
+  - If a print job fails when targeting an IPP printer emulated on the same machine, this is likely due to Windows network loopback restrictions on packaged apps. To fix this, open a PowerShell window **as Administrator** and run:
+  ```powershell
+  CheckNetIsolation.exe LoopbackExempt -a -n="{packageFamilyName}"
+  ```
+  Replace `{packageFamilyName}` with the actual package family name of the PSA app (displayed in the WinUI popup when the app is first launched).
+
+
 </details>
 
 ## Resources
