@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    NativeHost.dll - hand-rolled C native shim that bootstraps the .NET
+    runtime and forwards COM/WinRT activation requests into the managed
+    Tasks.dll. Registered as InProcessServer in Package.appxmanifest.
+
+    C/header/.def source files in this directory are picked up via globs,
+    so project edits are not needed when new files appear.
+
+    Output: NativeHost.dll, copied next to Tasks.dll in the MSIX layout
+    by PrintSupportApplication.csproj.
+  -->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{B1C2D3E4-F5A6-4B7C-8D9E-0F1A2B3C4D5E}</ProjectGuid>
+    <RootNamespace>NativeHost</RootNamespace>
+    <ProjectName>NativeHost</ProjectName>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <!--
+    Locate the .NET host pack (provides nethost.h, hostfxr.h,
+    coreclr_delegates.h, libnethost.lib). Override via /p:NetHostPath= or
+    /p:NetHostVersion= when building against a different SDK.
+  -->
+  <PropertyGroup Label="NetHostDiscovery">
+    <DotNetRoot Condition="'$(DotNetRoot)'==''">$(ProgramW6432)\dotnet</DotNetRoot>
+    <NetHostVersion Condition="'$(NetHostVersion)'==''">10.0.10</NetHostVersion>
+    <NetHostPath Condition="'$(NetHostPath)'==''">$(DotNetRoot)\packs\Microsoft.NETCore.App.Host.win-x64\$(NetHostVersion)\runtimes\win-x64\native</NetHostPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>NativeHost</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <CompileAs>CompileAsC</CompileAs>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
+      <PreprocessorDefinitions>NATIVEHOST_EXPORTS;_WINDOWS;_USRDLL;NETHOST_USE_AS_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(NetHostPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(NetHostPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libnethost.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!-- Explicit filename: the linker does not expand globs in
+           ModuleDefinitionFile (causes LNK1104 on '*.def'). The active
+           module-definition file is host.def. The <None Include="*.def">
+           glob below keeps any future .def visible in the IDE. -->
+      <ModuleDefinitionFile>$(ProjectDir)host.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- Globs keep *.c, *.h, and *.def files visible without project edits. -->
+  <ItemGroup>
+    <ClCompile Include="*.c" />
+    <ClInclude Include="*.h" />
+    <None Include="*.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!-- Fail loudly if libnethost.lib isn't where we expect. -->
+  <Target Name="VerifyNetHostPath" BeforeTargets="ClCompile">
+    <Error Condition="!Exists('$(NetHostPath)\libnethost.lib')" Text="libnethost.lib not found at '$(NetHostPath)\libnethost.lib'. Override with /p:NetHostPath=&lt;path&gt; or /p:NetHostVersion=&lt;version&gt; (e.g., /p:NetHostVersion=10.0.8)." />
+  </Target>
+</Project>

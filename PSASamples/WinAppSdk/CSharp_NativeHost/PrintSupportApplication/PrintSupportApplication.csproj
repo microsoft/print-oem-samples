@@ -1,0 +1,300 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
+    <RootNamespace>PrintSupportApplication</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x86;x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <PublishProfile>win-$(Platform).pubxml</PublishProfile>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <WindowsPackageType>MSIX</WindowsPackageType>
+    <Nullable>enable</Nullable>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <!-- Self-contained .NET deployment: full .NET 10 runtime (coreclr.dll,
+         clrjit.dll, hostfxr.dll, hostpolicy.dll, System.*.dll) ships inside
+         the MSIX. Partner machines do NOT need .NET 10 installed. -->
+    <SelfContained>true</SelfContained>
+    <PublishSelfContained>true</PublishSelfContained>
+    <PublishTrimmed>false</PublishTrimmed>
+    <GenerateAppxPackageOnBuild>true</GenerateAppxPackageOnBuild>
+    <EnableDefaultPriItems>false</EnableDefaultPriItems>
+    <!-- Package signing configuration -->
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <!-- Self-signed dev cert. Subject CN=Contoso matches Package.appxmanifest
+         Identity Publisher. Generated locally on first build (see README).
+         Cert is in Cert:\CurrentUser\My + Cert:\LocalMachine\TrustedPeople
+         (the latter is required for MSIX trust). .pfx is gitignored; each
+         dev/CI box regenerates its own. Partners swap in their production
+         cert. -->
+    <PackageCertificateThumbprint>5F53FF67E7EE1D96A8762F88E87F8B89DE268234</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>TestCert.pfx</PackageCertificateKeyFile>
+    <PackageCertificatePassword>TestPSANativeHost!</PackageCertificatePassword>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\contoso_logo.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <!--
+    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    package has not yet been restored.
+  -->
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.*" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.*" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tasks\Tasks.csproj" />
+    <!-- Reference XpsUtil.Projections - a normal .NET assembly with C# projections -->
+    <ProjectReference Include="..\..\..\XpsUtil\XpsUtil.Projections\XpsUtil.Projections.csproj" />
+    <!--
+      NativeHost.vcxproj produces NativeHost.dll, the native shim that the
+      MSIX appxmanifest registers as InProcessServer. Build-only dependency:
+      no managed reference, no projection - we just need the .dll to exist
+      so the copy target below can stage it into the package layout.
+    -->
+    <ProjectReference Include="..\Tasks\NativeHost\NativeHost.vcxproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <!-- Undefine TargetFramework only (vcxproj doesn't speak it). Force
+           Platform=x64 explicitly: NativeHost.vcxproj is x64-only and
+           previously Platform was undefined here, which made vcxproj
+           default to Win32 and trigger MSB8013 when PSA built for x86 or
+           when ProjectReference traversal asked for any non-x64 config.
+           The .sln-level mapping (NativeHost's non-x64 sln configs all
+           point at x64) handles direct sln builds; SetPlatform handles
+           the ProjectReference build path. -->
+      <UndefineProperties>TargetFramework</UndefineProperties>
+      <SetPlatform>Platform=x64</SetPlatform>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!--
+    Self-contained payload assembly.
+
+    With <SelfContained>true</SelfContained> + <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    on Tasks.csproj, the Tasks build output dir contains the full .NET runtime
+    (coreclr.dll, clrjit.dll, hostfxr.dll, hostpolicy.dll, ~300 System.*.dll
+    files) alongside Tasks.dll / Tasks.deps.json / Tasks.winmd. We probe both
+    layouts because the Tasks project is built via PSA's ProjectReference
+    (which forces Platform=x64) and may also be built standalone.
+  -->
+  <Target Name="IncludeTasksSelfContainedPayload" AfterTargets="Build" BeforeTargets="_ComputeAppxPackagePayload">
+    <PropertyGroup>
+      <_TasksRid>win-x64</_TasksRid>
+      <_TasksBinDirA>..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\$(_TasksRid)\</_TasksBinDirA>
+      <_TasksBinDirB>..\Tasks\bin\$(Configuration)\$(TargetFramework)\$(_TasksRid)\</_TasksBinDirB>
+      <_TasksBinDir Condition="Exists('$(_TasksBinDirA)Tasks.dll')">$(_TasksBinDirA)</_TasksBinDir>
+      <_TasksBinDir Condition="'$(_TasksBinDir)' == '' and Exists('$(_TasksBinDirB)Tasks.dll')">$(_TasksBinDirB)</_TasksBinDir>
+      <!-- Fallback: legacy framework-dependent layout without RID subdir -->
+      <_TasksBinDir Condition="'$(_TasksBinDir)' == ''">..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\</_TasksBinDir>
+    </PropertyGroup>
+
+    <Message Text="IncludeTasksSelfContainedPayload: source = $(_TasksBinDir)" Importance="high" />
+
+    <!-- Pull every file from the Tasks self-contained output into PSA's
+         OutputPath. That sweeps Tasks.dll, Tasks.deps.json, Tasks.winmd,
+         and the bundled .NET runtime (coreclr.dll, hostfxr.dll, etc.)
+         into one flat directory adjacent to NativeHost.dll. -->
+    <ItemGroup>
+      <_TasksPayload Include="$(_TasksBinDir)**\*.*" Condition="Exists('$(_TasksBinDir)Tasks.dll')" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_TasksPayload)"
+          DestinationFiles="@(_TasksPayload->'$(OutputPath)%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true"
+          Condition="'@(_TasksPayload)' != ''" />
+
+    <Warning Text="Tasks self-contained payload not found at $(_TasksBinDir) -- runtime files will be missing from MSIX"
+             Condition="!Exists('$(_TasksBinDir)Tasks.dll')" />
+  </Target>
+
+  <!--
+    NativeHost.dll staging into the MSIX is handled solely by
+    AddNativeHostToAppxPayload (below). A previous CopyNativeHost target
+    that also copied NativeHost.dll/pdb into $(OutputPath) was removed:
+    the packager then enumerated both the source vcxproj output and the
+    $(OutputPath) copy as payload candidates, producing APPX1101
+    duplicate-destination errors. AppxPackagePayload reaches into the
+    vcxproj output directly, so no $(OutputPath) stage is required.
+
+    NativeHost.dll is never activated when the PSA EXE runs outside the
+    deployed MSIX (BTH activation only happens out of the registered
+    InProcessServer), so dropping the $(OutputPath) copy does not affect
+    F5 debug runs.
+  -->
+
+  <!--
+    Force NativeHost.dll (and its PDB in Debug) into the MSIX payload.
+
+    Why this exists: NativeHost is referenced via <ProjectReference> with
+    ReferenceOutputAssembly=false (no managed reference, build-order only).
+    That suppression also opts the vcxproj out of WinAppSDK's automatic
+    MSIX-payload flow - _ComputeAppxPackagePayload walks item lists, not
+    $(OutputPath). So CopyNativeHost (above) stages the file on disk, but
+    nothing tells the packager to grab it. <AppxPackagePayload> is the
+    canonical WinAppSDK extension point for adding arbitrary files to the
+    package layout. TargetPath places NativeHost.dll at the MSIX root,
+    matching Package.appxmanifest's InProcessServer Path="NativeHost.dll".
+  -->
+  <!--
+    Stage NativeHost.dll into the MSIX root.
+
+    Why <Content Include ... Link=...> instead of <AppxPackagePayload>:
+    WinAppSDK 1.6's Microsoft.Build.Msix.Packaging.targets (around lines
+    1603-1610) uses the qualified-metadata expression
+    %(AppxPackagePayload..TargetPath) to copy TargetPath from user-
+    added items into its internal _UnfilteredAppxPackagePayload set.
+    In MSBuild 17/18 that double-dot syntax does not resolve - it is
+    passed through as a LITERAL string. Symptoms:
+      - 1 AppxPackagePayload item: build succeeds but the file lands in
+        the MSIX at the literal path "%(AppxPackagePayload..TargetPath)"
+        (URL-encoded). Manifest says <InProcessServer>NativeHost.dll
+        but the file lives elsewhere - activation fails at runtime.
+      - 2 or more items: APPX1101 ("two or more files with the same
+        destination path '%(AppxPackagePayload..TargetPath)'") because
+        every item ends up with the same literal destination.
+    Verified empirically in build #3.
+
+    <Content> + <Link> is the canonical SDK-style way to place an
+    arbitrary file at a chosen MSIX-relative path. The C# SDK respects
+    <Link> as the in-package path; WinAppSDK's packaging picks Content
+    items up via PackagingOutputs (OutputGroup=ContentFilesProjectOutput
+    Group) with their Link as the destination.
+
+    NativeHost.vcxproj produces the .dll; we link the build output here
+    rather than re-copying it.
+  -->
+  <ItemGroup Condition="'$(Platform)'=='x64'">
+    <Content Include="..\Tasks\NativeHost\bin\$(Platform)\$(Configuration)\NativeHost.dll"
+             Condition="Exists('..\Tasks\NativeHost\bin\$(Platform)\$(Configuration)\NativeHost.dll')">
+      <Link>NativeHost.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!--
+      Stage Tasks.deps.json, Tasks.runtimeconfig.json, and Tasks.winmd into
+      the MSIX root.
+ 
+      Why these files are explicitly listed as <Content> with <Link>:
+      The IncludeTasksSelfContainedPayload target (above) copies these files
+      into $(OutputPath), but WinAppSDK's _ComputeAppxPackagePayload walks
+      MSBuild item lists - not the file system. Files dropped into
+      $(OutputPath) by a custom Copy task are NOT seen by the packager.
+      Mirrors the NativeHost.dll Content/Link pattern (and uses Content/Link
+      rather than <AppxPackagePayload> for the same %(AppxPackagePayload..TargetPath)
+      MSBuild bug documented above).
+ 
+      Why these files matter:
+      - Tasks.deps.json: hostfxr / hostpolicy resolve every managed and native
+        dependency from this graph. Missing -> CoreCLR cannot resolve
+        Tasks.dll's references and assembly loads fail.
+      - Tasks.runtimeconfig.json: hostfxr_initialize_for_dotnet_command_line
+        REQUIRES this file adjacent to Tasks.dll. Missing -> hostfxr returns
+        an error code and CoreCLR is never created.
+      - Tasks.winmd: WinRT activation metadata for Tasks.* background task
+        type identities. Missing -> BTH activation can fail even when the
+        managed runtime payload is present. Without the complete payload set
+        in the MSIX, the BackgroundTaskHost can terminate with ExitReason=
+        UnexpectedAbort before signaling Run(), producing
+        PrintSupportExtensionBrokerSession E_UNEXPECTED on printer install.
+    -->
+    <Content Include="..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\win-x64\Tasks.deps.json"
+             Condition="Exists('..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\win-x64\Tasks.deps.json')">
+      <Link>Tasks.deps.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\win-x64\Tasks.runtimeconfig.json"
+             Condition="Exists('..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\win-x64\Tasks.runtimeconfig.json')">
+      <Link>Tasks.runtimeconfig.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\win-x64\Tasks.winmd"
+             Condition="Exists('..\Tasks\bin\$(Platform)\$(Configuration)\$(TargetFramework)\win-x64\Tasks.winmd')">
+      <Link>Tasks.winmd</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Define XPSUTIL_AVAILABLE to enable watermarking code -->
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);XPSUTIL_AVAILABLE</DefineConstants>
+
+    <!-- NOTE: VIRTUAL_PRINTER_DISABLED - Virtual Printer APIs are disabled -->
+    <!-- The Windows.Devices.Printers.VirtualPrinter* APIs exist in Windows SDK 10.0.26100.0 -->
+    <!-- but are not yet projected in Microsoft.Windows.SDK.NET.Ref package version 10.0.26100.57 -->
+    <!-- Generating CsWinRT projections causes type conflicts with existing IppPrintDevice types -->
+    <!-- This functionality will be enabled once Microsoft updates the SDK projections -->
+    <DefineConstants>$(DefineConstants);VIRTUAL_PRINTER_DISABLED</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Include Config files for virtual printer -->
+  <ItemGroup>
+    <Content Include="Config\PrinterPdc.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\PrinterPdr.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Registration-free WinRT activation manifest for native XpsUtil.dll -->
+  <ItemGroup>
+    <Content Include="XpsUtil.dll.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Target Name="CopyXpsUtilManifest" AfterTargets="Build">
+    <Copy SourceFiles="XpsUtil.dll.manifest" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- Include string resources for localization -->
+  <ItemGroup>
+    <PRIResource Include="Strings\en-US\Resources.resw" />
+    <PRIResource Include="Strings\en-US\ContosoMediaTypes.resw" />
+    <PRIResource Include="Strings\en-US\IppMediaTypes.resw" />
+  </ItemGroup>
+
+  <!--
+    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
+    Explorer "Package and Publish" context menu entry to be enabled for this project even if
+    the Windows App SDK Nuget package has not yet been restored.
+  -->
+  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
+
+  <!-- Publish Properties -->
+  <PropertyGroup>
+    <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
+    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
+    <!-- Trimming MUST stay disabled in all configurations: NativeHost.dll
+         resolves WinRT activation factories via reflection in Tasks.dll
+         that the trimmer would prune. -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Never</AppxBundle>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+  </PropertyGroup>
+</Project>   
