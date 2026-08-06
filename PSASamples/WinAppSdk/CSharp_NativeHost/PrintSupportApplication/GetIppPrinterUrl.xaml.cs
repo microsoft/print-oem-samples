@@ -136,7 +136,7 @@ namespace PrintSupportApplication
         }
 
         /// <summary>
-        /// Quiring the software printer devices, filtering the results
+        /// Querying the software printer devices, filtering the results
         /// by the known printer names
         /// </summary>
         private void QuerySoftwarePrinterDevice()

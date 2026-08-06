@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>XpsUtil.Projections</RootNamespace>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RestoreSources>https://api.nuget.org/v3/index.json</RestoreSources>
   </PropertyGroup>
 
   <!-- Map .NET Platform to C++ Platform for output path -->
@@ -29,7 +30,9 @@
 
   <!-- Build dependency on XpsUtil C++ project -->
   <ItemGroup>
-    <ProjectReference Include="..\..\..\XpsUtil\XpsUtil.vcxproj">
+    <!-- Build-order dependency on XpsUtil C++ project (VS/msbuild.exe only).
+         Skipped under dotnet CLI which cannot evaluate .vcxproj files. -->
+    <ProjectReference Include="..\XpsUtil.vcxproj" Condition="'$(MSBuildRuntimeType)' != 'Core'">
       <Project>{7b77cf65-1283-4417-8be7-299651392e71}</Project>
       <Name>XpsUtil</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

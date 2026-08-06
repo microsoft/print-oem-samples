@@ -229,7 +229,10 @@ namespace PrintSupportApplication
                 parameters.PrintDeviceCapabilitiesPackageRelativeFilePath = "Config\\PrinterPdc.xml";
                 parameters.PrintDeviceResourcesPackageRelativeFilePath = "Config\\PrinterPdr.xml";
                 parameters.PreferredInputFormat = (format == "OpenXps") ? VirtualPrinterPreferredInputFormat.OpenXps : VirtualPrinterPreferredInputFormat.PostScript;
-                parameters.SupportedInputFormats.Concat(supportedFormats);
+                foreach (var supportedFormat in supportedFormats)
+                {
+                    parameters.SupportedInputFormats.Add(supportedFormat);
+                }
                 parameters.EntryPoint = "Tasks.VirtualPrinterBackgroundTask";
 
                 var extensions = parameters.OutputFileExtensions;
@@ -237,8 +240,6 @@ namespace PrintSupportApplication
                 {
                     extensions.Add(outputFileExtensions[i]);
                 }
-
-                await ShowMessageDialog("Debug", $"supportedFormats.Count: {supportedFormats.Count}");
 
                 var installResult = await VirtualPrinterManager.InstallVirtualPrinterAsync(parameters);
 

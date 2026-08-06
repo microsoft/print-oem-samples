@@ -1,0 +1,124 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <Platforms>x64</Platforms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
+    <UseWinUI>true</UseWinUI>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Self-contained .NET deployment: the full .NET 10 runtime ships
+         inside the MSIX so partner machines need no system .NET install. -->
+    <SelfContained>true</SelfContained>
+    <PublishSelfContained>true</PublishSelfContained>
+    <PublishTrimmed>false</PublishTrimmed>
+    <EnableConsumingManagedCodeFromNativeHosting>true</EnableConsumingManagedCodeFromNativeHosting>
+    <!-- Required for components loaded via hostfxr load_assembly_and_get_function_pointer.
+         Forces the SDK to emit the full deps.json runtime/dependencies graph so the
+         hosting layer can resolve every framework / native asset when CoreCLR is
+         bootstrapped by NativeHost.dll rather than by a managed application host. -->
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+  </PropertyGroup>
+
+  <!--
+    Emit Tasks.runtimeconfig.json into the build output.
+
+    Why a custom target (not <GenerateRuntimeConfigurationFiles>true</>):
+    The .NET SDK's GenerateBuildRuntimeConfigurationFiles target is internally
+    gated on $(_IsExecutable). Class library projects (no <OutputType>Exe</>)
+    skip the actual JSON emission even when GenerateRuntimeConfigurationFiles
+    is set to true. Verified empirically: setting the property alone produces
+    obj\...\Tasks.genruntimeconfig.cache but never writes Tasks.runtimeconfig.json
+    next to Tasks.dll. The target below closes that gap by writing the
+    runtimeconfig.json explicitly for the native-host activation path.
+
+    Why we need it:
+    NativeHost.dll calls hostfxr_initialize_for_dotnet_command_line(L"Tasks.dll").
+    hostfxr REQUIRES a sibling Tasks.runtimeconfig.json or it returns an error
+    and CoreCLR never starts. Observed symptom on the printer-install path:
+    BackgroundTaskHost terminates with ExitReason=UnexpectedAbort before
+    signaling Run(), surfaced as
+    PrintSupportExtensionBrokerSession E_UNEXPECTED ("Background process
+    terminated unexpectedly") in the print ETW trace. Loops 3x then fails
+    the install permanently.
+
+    Content shape: self-contained -> "includedFrameworks" (NOT "framework"),
+    which tells hostfxr the runtime ships in the same directory and to skip
+    the system .NET install probe. CSWINRT_* config properties mirror the
+    SDK-generated runtimeconfig.json for a WinRT-enabled EXE, so Tasks.dll
+    sees the same WinRT projection behavior whether loaded via hostfxr or
+    the normal SDK host.
+  -->
+  <Target Name="EmitTasksRuntimeConfig"
+          AfterTargets="Build"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(OutputPath)Tasks.runtimeconfig.json">
+    <PropertyGroup>
+      <_TasksRuntimeConfigJson>{
+  "runtimeOptions": {
+    "tfm": "net10.0",
+    "includedFrameworks": [
+      {
+        "name": "Microsoft.NETCore.App",
+        "version": "10.0.0"
+      }
+    ],
+    "configProperties": {
+      "CSWINRT_ENABLE_DYNAMIC_OBJECTS_SUPPORT": true,
+      "CSWINRT_USE_EXCEPTION_RESOURCE_KEYS": false,
+      "CSWINRT_ENABLE_DEFAULT_CUSTOM_TYPE_MAPPINGS": true,
+      "CSWINRT_ENABLE_ICUSTOMPROPERTYPROVIDER_SUPPORT": true,
+      "CSWINRT_ENABLE_IREFERENCE_SUPPORT": true,
+      "CSWINRT_ENABLE_IDYNAMICINTERFACECASTABLE": true,
+      "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+      "CSWINRT_USE_WINDOWS_UI_XAML_PROJECTIONS": false
+    }
+  }
+}</_TasksRuntimeConfigJson>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(OutputPath)Tasks.runtimeconfig.json"
+                      Lines="$(_TasksRuntimeConfigJson)"
+                      Overwrite="true"
+                      Encoding="UTF-8" />
+    <Message Text="EmitTasksRuntimeConfig: wrote $(OutputPath)Tasks.runtimeconfig.json" Importance="high" />
+  </Target>
+
+  <PropertyGroup>
+    <CsWinRTComponent>true</CsWinRTComponent>
+    <CsWinRTWindowsMetadata>10.0.26100.0</CsWinRTWindowsMetadata>
+    <!-- The NativeHost bridge is a plain static class with an [UnmanagedCallersOnly]
+         export. It is NOT an activatable WinRT class. Excluding it from the CsWinRT
+         source generator prevents the generator from attempting to project it as a
+         runtime class, which would fail because the signature is unmanaged-only. -->
+    <CsWinRTExcludeFromSourceGenerator>Tasks.NativeHost.NativeHostBridge</CsWinRTExcludeFromSourceGenerator>
+  </PropertyGroup>
+
+  <!-- Per-platform RuntimeIdentifier for self-contained native-host publish.
+       NativeHost is x64-only; ARM64 deliberately not enumerated. -->
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.*" />
+  </ItemGroup>
+  <!-- Reference XpsUtil.Projections - a normal .NET assembly with C# projections -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\XpsUtil\XpsUtil.Projections\XpsUtil.Projections.csproj" />
+  </ItemGroup>
+
+  <!-- Define XPSUTIL_AVAILABLE to enable watermarking code -->
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);XPSUTIL_AVAILABLE</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Note: XpsUtil.dll will be copied by PrintSupportApplication project, not here -->
+  <!-- Tasks.dll is loaded by NativeHost.dll (hand-rolled C shim in Tasks/NativeHost/) -->
+  <!-- NativeHost.dll bootstraps the bundled .NET runtime via libnethost / hostfxr.
+       With <SelfContained>true</SelfContained> the output dir
+       (bin\x64\<cfg>\net10.0-windows10.0.26100.0\win-x64\) contains the full
+       runtime: coreclr.dll, clrjit.dll, hostfxr.dll, hostpolicy.dll, all
+       System.*.dll framework assemblies, plus Tasks.dll/Tasks.deps.json. -->
+</Project>

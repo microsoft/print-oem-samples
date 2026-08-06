@@ -1,0 +1,16 @@
+; ---------------------------------------------------------------------------
+; host.def - Native DLL exports.
+;
+; The Windows WinRT activation runtime, when it processes an
+; <InProcessServer> entry in Package.appxmanifest, calls LoadLibrary on the
+; registered <Path> and then resolves DllGetActivationFactory by *exact*
+; undecorated name. That contract is set in stone by combase.dll - we have
+; to match it.
+;
+; Using a .def file (rather than __declspec(dllexport)) guarantees the
+; symbol name is identical on x64, x86 (no leading underscore / @N suffix)
+; and ARM64 with no compiler-specific decoration. PRIVATE keeps the export
+; out of the import library, which we do not ship.
+; ---------------------------------------------------------------------------
+EXPORTS
+    DllGetActivationFactory     PRIVATE

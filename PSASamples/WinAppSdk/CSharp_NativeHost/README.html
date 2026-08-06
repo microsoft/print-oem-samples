@@ -365,9 +365,9 @@ code {
           : 'default'
     });
   </script>
-<h1 id="c-print-support-app-windows-app-sdk">C# Print Support App (Windows App SDK)</h1>
+<h1 id="c-print-support-app--native-host-variant-windows-app-sdk">C# Print Support App — Native Host variant (Windows App SDK)</h1>
 <ul>
-<li><a href="#c-print-support-app-windows-app-sdk">C# Print Support App (Windows App SDK)</a>
+<li><a href="#c-print-support-app--native-host-variant-windows-app-sdk">C# Print Support App — Native Host variant (Windows App SDK)</a>
 <ul>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#project-structure">Project Structure</a></li>
@@ -378,13 +378,15 @@ code {
 </li>
 </ul>
 <h2 id="overview">Overview</h2>
-<p>This sample demonstrates a Print Support App (PSA) implementation using C#/.NET 10 and the Windows App SDK (WinUI 3). The solution includes:</p>
+<p>This sample demonstrates a Print Support App (PSA) implementation using C#/.NET 10 and the Windows App SDK (WinUI 3). Unlike the baseline <code>CSharp</code> sample — which relies on the CsWinRT-generated <code>WinRT.Host.dll</code> to host the background-task projections — this <strong>Native Host</strong> variant replaces that host with a small, hand-rolled native CoreCLR hosting shim (<code>NativeHost.dll</code>) and ships a <strong>self-contained</strong> .NET 10 runtime inside the MSIX. This gives partners a reviewable, customizable runtime bootstrap that runs inside <code>BackgroundTaskHost.exe</code> and removes any dependency on a system-installed .NET runtime.</p>
+<p>The solution includes:</p>
 <ul>
-<li><strong>PrintSupportApplication</strong>: The main WinUI 3 application that provides printer settings UI, job activation handling, watermark preview, virtual printer management, and workflow management.</li>
-<li><strong>Tasks</strong>: C# .NET 10 project containing background tasks for print support extension, print workflow processing, and virtual printer operations. Uses CsWinRT 2.2.0+ to host WinRT projections for OS callbacks.</li>
-<li><strong>XpsUtil</strong>: C++ WinRT utility component for XPS document manipulation, including watermarking and page processing (shared with the C++ sample).</li>
+<li><strong>PrintSupportApplication</strong>: The main WinUI 3 application that provides printer settings UI, job activation handling, watermark preview, virtual printer management, and workflow management. Owns the MSIX packaging that stages the self-contained runtime and <code>NativeHost.dll</code> into the package layout.</li>
+<li><strong>Tasks</strong>: C# .NET 10 CsWinRT component containing background tasks for print support extension, print workflow processing, and virtual printer operations. Also contains <code>NativeHostBridge.cs</code>, the managed half of the native ⇄ managed activation contract that resolves activation factories from the CsWinRT-generated registry.</li>
+<li><strong>NativeHost</strong>: A native (C) DLL registered as the WinRT <code>InProcessServer</code> for the background tasks. It exports <code>DllGetActivationFactory</code>, bootstraps the bundled CoreCLR via <code>hostfxr</code>, resolves the managed <code>NativeHostBridge</code> method, and forwards activation requests to it. See <code>Tasks\NativeHost\README.md</code> for a deep dive.</li>
+<li><strong>XpsUtil</strong>: C++ WinRT native component for XPS document manipulation (watermarking, page processing), consumed through <strong>XpsUtil.Projections</strong>, a C# projections assembly. <code>XpsUtil.dll</code> is activated via registration-free WinRT (<code>XpsUtil.dll.manifest</code>). Shared with the C++ sample.</li>
 </ul>
-<p>The app showcases modern print support capabilities including custom printer settings, XPS document manipulation, watermark application, print ticket manipulation, IPP attribute handling, and job notifications using the Windows App SDK framework.</p>
+<p>The app showcases modern print support capabilities including custom printer settings, XPS document manipulation, watermark application, print ticket manipulation, IPP attribute handling, virtual printers, and job notifications using the Windows App SDK framework.</p>
 <h2 id="project-structure">Project Structure</h2>
 <pre><code>CSharp/
 ├── PrintSupportApplication/                    # Main WinUI 3 application (C# .NET 10)
@@ -402,7 +404,9 @@ code {
 │   ├── PreviewPaginationControl.xaml(.cs)      # Page navigation control
 │   ├── WatermarkPreviewControl.xaml(.cs)       # Watermark preview control
 │   ├── WatermarkOptions.cs                     # Watermark configuration
-│   ├── Package.appxmanifest                    # App package manifest
+│   ├── Package.appxmanifest                    # App package manifest (InProcessServer → NativeHost.dll)
+│   ├── XpsUtil.dll.manifest                    # Reg-free WinRT activation for native XpsUtil.dll
+│   ├── PrintSupportApplication.csproj          # App project (self-contained; stages runtime + NativeHost.dll)
 │   ├── PrintSupportApplication.sln             # Solution file
 │   ├── Config/                                 # Printer configuration
 │   │   ├── PrinterPdc.xml                      # Printer device capabilities
@@ -411,13 +415,23 @@ code {
 │   │   └── en-US/                              # English (US) strings
 │   └── Assets/                                 # Application assets
 │
-├── Tasks/                                      # Background tasks (C# .NET 10)
+├── Tasks/                                      # Background tasks (C# .NET 10 CsWinRT component)
 │   ├── PrintSupportExtensionBackgroundTask.cs  # PSE background task
 │   ├── PrintSupportWorkflowBackgroundTask.cs   # Workflow background task
 │   ├── VirtualPrinterBackgroundTask.cs         # Virtual printer task
-│   └── LocalStorageUtil.cs                     # Local storage utilities
+│   ├── LocalStorageUtil.cs                     # Local storage utilities
+│   ├── NativeHostBridge.cs                     # Managed half of the native ⇄ managed activation contract
+│   ├── Tasks.csproj                            # Self-contained; emits Tasks.runtimeconfig.json for hostfxr
+│   └── NativeHost/                             # Native CoreCLR hosting shim (C)
+│       ├── host.c                              # DllGetActivationFactory + CoreCLR bootstrap via hostfxr
+│       ├── host.h                              # Internal declarations
+│       ├── host.def                            # Exports DllGetActivationFactory (undecorated)
+│       ├── NativeHost.vcxproj                  # Builds NativeHost.dll (x64-only)
+│       └── README.md                           # Deep dive on the hosting shim
 │
-└── XpsUtil (external)                          # XPS utilities (C++ WinRT)
+└── XpsUtil (external, ..\..\..\XpsUtil)        # XPS utilities (C++ WinRT native component)
+    ├── XpsUtil.vcxproj                         # Native component (XpsUtil.dll)
+    ├── XpsUtil.Projections/                    # C# projections assembly consumed by Tasks/PSA
     ├── XpsPageWatermarker.*                    # Watermark application
     ├── XpsPageWrapper.*                        # XPS page manipulation
     ├── XpsSequentialDocument.*                 # Document processing
@@ -427,12 +441,13 @@ code {
 <details>
 <summary>Version 2 (Current)</summary>
 <ul>
+<li><strong>Native hosting shim</strong>: Replaced the CsWinRT-generated <code>WinRT.Host.dll</code> with a hand-rolled native CoreCLR host (<code>NativeHost.dll</code>) registered as the WinRT <code>InProcessServer</code> for the background tasks</li>
+<li><strong>Self-contained deployment</strong>: The full .NET 10 runtime is bundled inside the MSIX (<code>hostfxr.dll</code>, <code>hostpolicy.dll</code>, <code>coreclr.dll</code>, framework assemblies) — no system .NET install required on partner machines</li>
+<li><strong>XpsUtil.Projections</strong>: Watermarking consumed via a C# projections assembly over the native <code>XpsUtil.dll</code>, activated through registration-free WinRT (<code>XpsUtil.dll.manifest</code>)</li>
 <li>Upgraded to .NET 10 for improved performance and latest language features</li>
-<li>Updated to CsWinRT 2.2.0+ for better .NET 8+ support</li>
-<li>Complete migration from UWP C# sample with full UI functionality</li>
-<li>All 10 UI pages migrated (UserLaunchMainPage, SettingsActivatedMainPage, JobActivatedMainPage, PrintTicketManipulationExample, WatermarkManipulationExample, JobNotificationExample, VirtualPrintersPage, GetIppPrinterUrl, AppInfo, PreviewPaginationControl)</li>
-<li>Full watermarking support via XpsUtil C++ WinRT component</li>
-<li>Background tasks: PrintSupportExtension, PrintSupportWorkflow, VirtualPrinter</li>
+<li>Uses CsWinRT 2.2.0+ and Windows App SDK 1.6 (self-contained)</li>
+<li>All UI pages migrated (UserLaunchMainPage, SettingsActivatedMainPage, JobActivatedMainPage, PrintTicketManipulationExample, WatermarkManipulationExample, JobNotificationExample, VirtualPrintersPage, GetIppPrinterUrl, AppInfo, PreviewPaginationControl)</li>
+<li>Background tasks: PrintSupportExtension, PrintSupportWorkflow, VirtualPrinter (three registered virtual printers: PDF, PostScript, Cloud)</li>
 <li>Configuration files: PrinterPdc.xml, PrinterPdr.xml</li>
 <li>Localization resources: en-US string resources for display names and media types</li>
 </ul>
@@ -449,9 +464,10 @@ code {
 <h2 id="remarks">Remarks</h2>
 <details>
 <ul>
-<li>This sample requires .NET 10 and the Windows App SDK installed on the machine, and is designed for Windows 11 24H2 (build 26010) and later.</li>
-<li>Uses CsWinRT 2.2.0+ to host WinRT projections for OS callbacks during PSA operations.</li>
-<li><strong>CRITICAL: Must use MSBuild or Visual Studio to build (not dotnet CLI).</strong> The XpsUtil C++ WinRT component requires MSBuild; dotnet CLI cannot compile C++ projects. Watermarking features will not work without XpsUtil.</li>
+<li>This sample is self-contained: it bundles the .NET 10 runtime and the Windows App SDK inside the MSIX, so a system-installed .NET 10 runtime is <strong>not</strong> required on the target machine. It is designed for Windows 11 24H2 (build 26010) and later.</li>
+<li>Unlike the baseline <code>CSharp</code> sample, the background tasks are hosted by a hand-rolled native CoreCLR shim (<code>NativeHost.dll</code>) rather than the CsWinRT-generated <code>WinRT.Host.dll</code>. <code>NativeHost.dll</code> is the registered <code>InProcessServer</code>; it bootstraps CoreCLR via <code>hostfxr</code> and forwards WinRT activation to the managed <code>NativeHostBridge</code> in <code>Tasks.dll</code>. See <code>Tasks\NativeHost\README.md</code> for the full contract.</li>
+<li>Uses CsWinRT 2.2.0+ and Windows App SDK 1.6 to project WinRT types for OS callbacks during PSA operations.</li>
+<li><strong>CRITICAL: Must use MSBuild or Visual Studio to build (not dotnet CLI).</strong> Both the <code>NativeHost</code> (C) and <code>XpsUtil</code> (C++ WinRT) native components require MSBuild; dotnet CLI cannot compile them. Activation and watermarking features will not work without them.</li>
 </ul>
 <p><strong>Building the Solution:</strong></p>
 <ol>
@@ -520,13 +536,15 @@ code {
 </table>
 <p><strong>Build Order</strong> (automatically handled by Visual Studio/MSBuild):</p>
 <ol>
-<li>XpsUtil.vcxproj (generates XpsUtil.winmd and XpsUtil.dll)</li>
-<li>Tasks.csproj (consumes XpsUtil.winmd via CsWinRT, generates WinRT.Host.dll)</li>
-<li>PrintSupportApplication.csproj (consumes both Tasks and XpsUtil)</li>
+<li>XpsUtil.vcxproj (native C++ WinRT component; generates XpsUtil.winmd and XpsUtil.dll)</li>
+<li>XpsUtil.Projections.csproj (C# projections over XpsUtil.dll)</li>
+<li>Tasks.csproj (CsWinRT component; self-contained publish, emits Tasks.runtimeconfig.json for hostfxr)</li>
+<li>NativeHost.vcxproj (native C shim; generates NativeHost.dll)</li>
+<li>PrintSupportApplication.csproj (stages the self-contained runtime + NativeHost.dll into the MSIX)</li>
 </ol>
 <p><strong>Supported Platforms:</strong></p>
 <ul>
-<li>x64 (Recommended for development/testing)</li>
+<li>x64 (Recommended — the <code>NativeHost</code> shim is x64-only)</li>
 <li>x86 (for x86 systems)</li>
 <li>ARM64 (for ARM devices)</li>
 </ul>
@@ -534,21 +552,28 @@ code {
 <ul>
 <li><strong>Tasks project:</strong>
 <ul>
-<li>Requires CsWinRT NuGet package</li>
-<li>Must include the following PropertyGroup:
+<li>Requires the CsWinRT NuGet package</li>
+<li>Must be marked as a CsWinRT component and publish self-contained so the .NET runtime is bundled:
 <pre><code class="language-xml">&lt;PropertyGroup&gt;
   &lt;CsWinRTComponent&gt;true&lt;/CsWinRTComponent&gt;
   &lt;CsWinRTWindowsMetadata&gt;10.0.26100.0&lt;/CsWinRTWindowsMetadata&gt;
+  &lt;!-- Exclude the unmanaged bridge from the CsWinRT source generator --&gt;
+  &lt;CsWinRTExcludeFromSourceGenerator&gt;Tasks.NativeHost.NativeHostBridge&lt;/CsWinRTExcludeFromSourceGenerator&gt;
+  &lt;SelfContained&gt;true&lt;/SelfContained&gt;
+  &lt;EnableDynamicLoading&gt;true&lt;/EnableDynamicLoading&gt;
 &lt;/PropertyGroup&gt;
 </code></pre>
 </li>
-<li>This is required to bring in <code>WinRT.Host.dll</code> and supporting files for hosting the projection.</li>
+<li><code>NativeHostBridge</code> exposes an <code>[UnmanagedCallersOnly]</code> <code>GetActivationFactory</code> method that resolves factories from the CsWinRT-generated <code>WinRT.Module</code> registry. It is <strong>not</strong> an activatable WinRT class, so it is excluded from the source generator.</li>
+<li><code>Tasks.csproj</code> also emits <code>Tasks.runtimeconfig.json</code> (a class library does not normally get one); <code>hostfxr_initialize_for_dotnet_command_line</code> requires it next to <code>Tasks.dll</code> or CoreCLR never starts.</li>
 </ul>
 </li>
 <li><strong>PrintSupportApplication project:</strong>
 <ul>
-<li>Requires a ProjectReference on the Tasks project</li>
-<li>Must set: <code>&lt;WindowsAppSDKSelfContained&gt;true&lt;/WindowsAppSDKSelfContained&gt;</code></li>
+<li>Requires a ProjectReference on the Tasks project and on <code>XpsUtil.Projections</code></li>
+<li>Requires a build-only ProjectReference on <code>NativeHost.vcxproj</code> (<code>ReferenceOutputAssembly=false</code>) so the shim is built and staged into the MSIX</li>
+<li>Must set: <code>&lt;WindowsAppSDKSelfContained&gt;true&lt;/WindowsAppSDKSelfContained&gt;</code> and <code>&lt;SelfContained&gt;true&lt;/SelfContained&gt;</code></li>
+<li>Owns the packaging targets that copy the self-contained runtime, <code>NativeHost.dll</code>, <code>Tasks.deps.json</code>, <code>Tasks.runtimeconfig.json</code>, and <code>Tasks.winmd</code> into the MSIX root</li>
 <li>Required NuGet packages: CsWinRT, SDK build tools, WindowsAppSDK</li>
 </ul>
 </li>
@@ -557,20 +582,28 @@ code {
 <ul>
 <li>The <code>Package.appxmanifest</code> must declare the following extensions in the Application section:
 <pre><code class="language-xml">&lt;Extensions&gt;
-  &lt;psa:Extension Category=&quot;windows.printSupportExtension&quot; EntryPoint=&quot;Tasks.PrintSupportExtensionBackgroundTask&quot;/&gt;
-  &lt;psa:Extension Category=&quot;windows.printSupportWorkflow&quot; EntryPoint=&quot;Tasks.PrintSupportWorkflowBackgroundTask&quot;/&gt;
-  &lt;psa:Extension Category=&quot;windows.printSupportSettingsUI&quot; EntryPoint=&quot;PrintSupportApplication.App&quot;/&gt;
-  &lt;psa:Extension Category=&quot;windows.printSupportJobUI&quot; EntryPoint=&quot;PrintSupportApplication.App&quot;/&gt;
+  &lt;printsupport:Extension Category=&quot;windows.printSupportExtension&quot; EntryPoint=&quot;Tasks.PrintSupportExtensionBackgroundTask&quot;/&gt;
+  &lt;printsupport:Extension Category=&quot;windows.printSupportWorkflow&quot; EntryPoint=&quot;Tasks.PrintSupportWorkflowBackgroundTask&quot;/&gt;
+  &lt;printsupport:Extension Category=&quot;windows.printSupportSettingsUI&quot; EntryPoint=&quot;PrintSupportApplication.App&quot;/&gt;
+  &lt;printsupport:Extension Category=&quot;windows.printSupportJobUI&quot; EntryPoint=&quot;PrintSupportApplication.App&quot;/&gt;
 &lt;/Extensions&gt;
 </code></pre>
 </li>
-<li>The following extension information (outside of the Application section) is required for task activation:
+<li>The following extension information (outside of the Application section) is required for task activation. Note the <code>&lt;Path&gt;</code> points at <strong><code>NativeHost.dll</code></strong>, not <code>WinRT.Host.dll</code>:
 <pre><code class="language-xml">&lt;Extensions&gt;
   &lt;Extension Category=&quot;windows.activatableClass.inProcessServer&quot;&gt;
     &lt;InProcessServer&gt;
-      &lt;Path&gt;WinRT.Host.dll&lt;/Path&gt;
-      &lt;ActivatableClass ActivatableClassId=&quot;Tasks.PrintSupportExtensionBackgroundTask&quot; ThreadingModel=&quot;both&quot; /&gt;
+      &lt;Path&gt;NativeHost.dll&lt;/Path&gt;
       &lt;ActivatableClass ActivatableClassId=&quot;Tasks.PrintSupportWorkflowBackgroundTask&quot; ThreadingModel=&quot;both&quot; /&gt;
+      &lt;ActivatableClass ActivatableClassId=&quot;Tasks.PrintSupportExtensionBackgroundTask&quot; ThreadingModel=&quot;both&quot; /&gt;
+      &lt;ActivatableClass ActivatableClassId=&quot;Tasks.VirtualPrinterBackgroundTask&quot; ThreadingModel=&quot;both&quot; /&gt;
+    &lt;/InProcessServer&gt;
+  &lt;/Extension&gt;
+  &lt;Extension Category=&quot;windows.activatableClass.inProcessServer&quot;&gt;
+    &lt;InProcessServer&gt;
+      &lt;Path&gt;XpsUtil.dll&lt;/Path&gt;
+      &lt;ActivatableClass ActivatableClassId=&quot;XpsUtil.XpsPageWatermarker&quot; ThreadingModel=&quot;both&quot; /&gt;
+      &lt;ActivatableClass ActivatableClassId=&quot;XpsUtil.XpsSequentialDocument&quot; ThreadingModel=&quot;both&quot; /&gt;
     &lt;/InProcessServer&gt;
   &lt;/Extension&gt;
 &lt;/Extensions&gt;
@@ -578,6 +611,7 @@ code {
 </li>
 <li>Required capabilities:
 <ul>
+<li><code>runFullTrust</code> — required for the PSA / self-contained packaging model</li>
 <li><code>privateNetworkClientServer</code> — For IPP communication</li>
 <li>PrintSupport namespaces and other standard PSA adjustments</li>
 </ul>
@@ -585,8 +619,9 @@ code {
 </ul>
 <p><strong>Known Issues:</strong></p>
 <ul>
+<li>Virtual Printer APIs (<code>Windows.Devices.Printers.VirtualPrinter*</code>) exist in Windows SDK 10.0.26100.0 but are not yet projected in the <code>Microsoft.Windows.SDK.NET.Ref</code> package used here, so that path is compiled out via the <code>VIRTUAL_PRINTER_DISABLED</code> constant. It will be enabled once the SDK projections ship.</li>
 <li>Unable to retrieve the instance arguments as <code>PrintWorkflowJobActivatedEventArgs</code> when handling an activation event for PrintSupportJobUI (this may be resolved with .NET 10 and CsWinRT 2.2+ — to be tested)</li>
-<li>RSP files support CsWinRT and have paths specific to the machine; they will likely need to be adjusted or recreated for the machine building the application</li>
+<li>The self-contained runtime must be staged completely into the MSIX. If <code>Tasks.deps.json</code>, <code>Tasks.runtimeconfig.json</code>, or the bundled <code>hostfxr.dll</code>/<code>coreclr.dll</code> are missing, <code>BackgroundTaskHost.exe</code> terminates with <code>ExitReason=UnexpectedAbort</code> and printer install fails — always fix the MSIX bundling.</li>
 </ul>
 </details>
 <h2 id="resources">Resources</h2>

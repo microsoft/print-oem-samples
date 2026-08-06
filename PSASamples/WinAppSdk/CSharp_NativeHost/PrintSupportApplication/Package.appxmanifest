@@ -12,9 +12,9 @@
   IgnorableNamespaces="uap uap12 printsupport printsupport2 rescap">
 
   <Identity
-    Name="2ddb7082-7566-484c-8d99-7f0b268e11f4"
+    Name="Contoso.PrintSupportApplication.NativeHost"
     Publisher="CN=Contoso"
-    Version="1.0.3.0" />
+    Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="2ddb7082-7566-484c-8d99-7f0b268e11f4" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -84,7 +84,7 @@
   <Extensions>
     <Extension Category="windows.activatableClass.inProcessServer">
       <InProcessServer>
-        <Path>WinRT.Host.dll</Path>
+        <Path>NativeHost.dll</Path>
         <ActivatableClass ActivatableClassId="Tasks.PrintSupportWorkflowBackgroundTask" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="Tasks.PrintSupportExtensionBackgroundTask" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="Tasks.VirtualPrinterBackgroundTask" ThreadingModel="both" />
