@@ -14,6 +14,11 @@ namespace PrintSupportApplication
     {
         private Window? m_window;
 
+        // Keeps the modal "More settings" window host alive for the duration of the
+        // settings activation. The handler also self-roots via a GCHandle, but holding
+        // a reference here keeps the ownership obvious.
+        private ModalWindowHandler? m_settingsModalWindow;
+
         /// <summary>
         /// Stores the settings activation args so other pages can access the printer context.
         /// </summary>
@@ -101,15 +106,22 @@ namespace PrintSupportApplication
             if (settingsArgs == null) return;
             SettingsActivationArgs = settingsArgs;
 
-            m_window = new Window();
             var rootFrame = new Frame();
 
             // Navigate to SettingsActivatedMainPage
             // Pass the activation args as navigation parameter
             rootFrame.Navigate(typeof(SettingsActivatedMainPage), settingsArgs);
 
-            m_window.Content = rootFrame;
-            m_window.Activate();
+            // Host the settings UI in a modal window owned by the print dialog's owner
+            // window, mirroring the C++/WinRT sample's ModalWindowHandler. A plain
+            // WinUI Window is neither owned by nor modal to the caller, so the "More
+            // settings" UI would otherwise appear as an independent top-level window.
+            // OwnerWindowId is a Windows.UI.WindowId; Win32Interop works with
+            // Microsoft.UI.WindowId. Both wrap the same raw HWND value, so convert
+            // through it (mirrors the C++ sample's { OwnerWindowId().Value } init).
+            var ownerWindowId = new Microsoft.UI.WindowId { Value = settingsArgs.OwnerWindowId.Value };
+            m_settingsModalWindow = new ModalWindowHandler(ownerWindowId, rootFrame);
+            m_settingsModalWindow.Activate();
         }
 
         private void HandleJobActivation(PrintWorkflowJobActivatedEventArgs? jobArgs)
